@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelNurse", "TravelNurse\TravelNurse.csproj", "{C31C8A24-C99F-4DD8-A0E8-89D0F6C25FF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelNurseServer", "TravelNurseServer\TravelNurseServer.csproj", "{A45B7474-35E2-4025-B4BC-512DED8D24E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{A386585E-8995-4BE2-B228-8B948803CEBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C31C8A24-C99F-4DD8-A0E8-89D0F6C25FF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C31C8A24-C99F-4DD8-A0E8-89D0F6C25FF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C31C8A24-C99F-4DD8-A0E8-89D0F6C25FF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C31C8A24-C99F-4DD8-A0E8-89D0F6C25FF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A45B7474-35E2-4025-B4BC-512DED8D24E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A45B7474-35E2-4025-B4BC-512DED8D24E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A45B7474-35E2-4025-B4BC-512DED8D24E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A45B7474-35E2-4025-B4BC-512DED8D24E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A386585E-8995-4BE2-B228-8B948803CEBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A386585E-8995-4BE2-B228-8B948803CEBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A386585E-8995-4BE2-B228-8B948803CEBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A386585E-8995-4BE2-B228-8B948803CEBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
