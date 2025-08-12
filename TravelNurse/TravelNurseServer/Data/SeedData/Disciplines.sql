@@ -1,0 +1,15 @@
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'DIAGNOSTIC IMAGING', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'CARDIOPULMONARY', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'MEDICAL LABORATORY', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'ONCOLOGY', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'REHAB THERAPY', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'NEURODIAGNOSTIC', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'RN', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'PHARMACY', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'CNA', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'LPN', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'MEDICAL ASSISTANT', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'SURGICAL TECHS', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'ADMINISTRATION', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'APPLIED BEHAVIORAL ANALYSIS', FALSE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Disciplines" ("Abbreviation", "Name", "IsForProvider", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('', 'MEDICATION AIDE', FALSE, NOW(), NOW(), '1776-07-16');

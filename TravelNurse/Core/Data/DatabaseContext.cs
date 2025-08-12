@@ -9,11 +9,11 @@ namespace Core.Data;
 
 public class DatabaseContext : DbContext
 {
-    // protected DatabaseContext(DbContextOptions options
-    //     ): base(options)
-    // {
-    //     
-    // }
+    protected DatabaseContext(DbContextOptions options
+        ): base(options)
+    {
+        
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

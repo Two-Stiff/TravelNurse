@@ -27,3 +27,4 @@ C:\Projects\Blazor\TravelNurse\TravelNurse\obj\Debug\net8.0\refint\TravelNurse.d
 C:\Projects\Blazor\TravelNurse\TravelNurse\obj\Debug\net8.0\TravelNurse.pdb
 C:\Projects\Blazor\TravelNurse\TravelNurse\obj\Debug\net8.0\TravelNurse.genruntimeconfig.cache
 C:\Projects\Blazor\TravelNurse\TravelNurse\obj\Debug\net8.0\ref\TravelNurse.dll
+C:\Projects\Blazor\TravelNurse\TravelNurse\obj\Debug\net8.0\TravelNurse.sourcelink.json

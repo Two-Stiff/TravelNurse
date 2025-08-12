@@ -1,0 +1,61 @@
+# .NET build output
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# User secrets
+**/secrets.json
+
+# Environment files
+.env
+.env.*
+
+# Test results and coverage
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+
+# Package artifacts
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+
+# Temporary files
+*.tmp
+*.bak
+~$*
+*.swp
+
+# Node modules (if using JavaScript interop)
+**/node_modules/
+
+# wwwroot generated output (optional for Blazor)
+**/wwwroot/dist/
+**/wwwroot/generated/
+
+# ReSharper and Rider settings
+_ReSharper*/
+*.DotSettings.user
