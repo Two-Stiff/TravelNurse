@@ -1,3 +1,4 @@
+@using TravelNurseServer.Dtos.TablePaginationParams
 @using TravelNurseServer.Helpers
 @typeparam T
 @inject ISnackbar Snackbar
@@ -66,10 +67,25 @@
     public EventCallback<HashSet<SelectOption>> UpdateSelectedItems { get; set; }
     
     [Parameter] 
+    public List<DataGridFilterDto> FilterOptions { get; set; } = new();
+    
+    [Parameter] 
+    public EventCallback<List<DataGridFilterDto>> UpdateFilterOptions { get; set; }
+    
+    [Parameter] 
     public EventCallback<List<SelectOption>> UpdateOptions { get; set; }
     
+    [Parameter] 
+    public string PropertyName { get; set; } = "";
+    
+    private List<DataGridFilterDto> _filterOptions = new List<DataGridFilterDto>();
     
     void OpenFilter() => FilterOpenState = !FilterOpenState;
+    
+    protected override void OnInitialized()
+    {
+        _filterOptions = FilterOptions;
+    }
     
     private void SelectedChanged(SelectOption item, bool value, HashSet<SelectOption> filterList)
     {
@@ -112,6 +128,8 @@
 
     private async Task ClearFilterAsync(FilterContext<T> context)
     {
+        _filterOptions.RemoveAll(x => x.PropertyName == PropertyName);
+        await UpdateFilterOptions.InvokeAsync(_filterOptions);
         await UpdateSelectedItems.InvokeAsync(new HashSet<SelectOption>());
         SelectedItems = new HashSet<SelectOption>();
         var newOptions = Options.Select(x => new SelectOption()
@@ -122,9 +140,8 @@
             Disabled = false
         });
         await UpdateOptions.InvokeAsync(newOptions.ToList());
-        await context.Actions.ApplyFilterAsync(FilterDefinitionState);
-            
         StateHasChanged();
+        await context.Actions.ApplyFilterAsync(FilterDefinitionState);
     } 
     
 }

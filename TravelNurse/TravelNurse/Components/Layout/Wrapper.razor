@@ -1,0 +1,17 @@
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<div 
+    style="display: flex; flex-direction: column;
+flex-grow: 1; gap: 1rem; padding: 1.5rem; max-width: 90vw; min-width: 85vw;" 
+>
+    @ChildContent
+</div>
+
+@code {
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    // In the future, implement JWT token in here and pass in a list of access permissions
+}

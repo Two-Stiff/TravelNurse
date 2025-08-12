@@ -138,7 +138,7 @@
         
         else
         {
-            _filterValue = value;
+            _filterValue = value.ToLower();
             _canShowFilterButton = true;
         }
     }
@@ -183,9 +183,7 @@
         await FilterStringChanged.InvokeAsync(null);
         FilterOptions.RemoveAll(x => x.PropertyName == PropertyName);
         await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
-        StateHasChanged();
-        
-        
+        await InvokeAsync(StateHasChanged);
         QueryParamHelper.RemoveQueryParameter(Navigation, PropertyName);
     }
 }

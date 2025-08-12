@@ -220,6 +220,23 @@ public static class LinqExtensions
         }
         return entity;
     }
+    
+    public static async Task<T> GetAsync<T>(
+        this IQueryable<T> list,
+        int id,
+        NotFoundException? notFoundException = null
+    ) where T : Entity
+    {
+        var entity = await list.SingleOrDefaultAsync(e => e.Id == id);
+
+        if (entity == null)
+        {
+            throw notFoundException ?? new NotFoundException<T>();
+        }
+
+        return entity;
+    }
+
 
 
     /// <summary>

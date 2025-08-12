@@ -8,6 +8,7 @@ public static class ConfigurationService
     {
         services.AddScoped<IDisciplineService, DisciplineService>();
         services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IProviderService, ProviderService>();
 
         return services;
     }

@@ -1,14 +1,18 @@
 @page "/allJobs"
 @using TravelNurse.Components.Src.Tables
+@using TravelNurse.Components.Layout
 @rendermode InteractiveServer
 @inject JobTableStore JobTableContextStore
 
-<MudText Typo="Typo.h6"> Locum Jobs </MudText>
+<PageTitle>All Jobs</PageTitle>
 
-<CascadingValue Value="JobTableContextStore">
-    <JobsTable />
-</CascadingValue>
+<Wrapper>
+    <MudText Typo="Typo.h6"> Locum Jobs </MudText>
 
+    <CascadingValue Value="JobTableContextStore">
+        <JobsTable />
+    </CascadingValue>
+</Wrapper>
 
 @code {
     

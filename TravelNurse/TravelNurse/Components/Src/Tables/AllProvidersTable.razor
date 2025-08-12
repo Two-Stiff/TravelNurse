@@ -1,5 +1,238 @@
-<h3>AllProvidersTable</h3>
+@using System.Reflection
+@using TravelNurse.Components.Common.Enums
+@using TravelNurse.Components.Common.Services
+@using TravelNurse.Components.Common.Utils
+@using TravelNurse.Components.MudFilters
+@using TravelNurseServer.Dtos.Jobs.Get
+@using TravelNurseServer.Dtos.Providers.Get
+@using TravelNurseServer.Dtos.TablePaginationParams
+@using TravelNurseServer.Enums
+@using TravelNurseServer.Helpers
+@using TravelNurseServer.Services
+@rendermode InteractiveServer
+@inject IProviderService ProviderService
+@inject IDisciplineService DisciplineService
+@inject NavigationManager Navigation
+
+@if (_isLoadingAllDependencies)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else
+{
+    <MudDataGrid ServerData="LoadGridData"
+                 T="GetProviderDto" @ref="@AllProviderTableContextStore.DataGrid"
+                 Class="w-full ml-8 mr-8"
+                 Filterable="true"
+                 FilterMode="@DataGridFilterMode.ColumnFilterRow"
+                 Style="overflow-x: visible">
+        <Columns>
+            <PropertyColumn Property="@(item => item.Id)" Title="Id" Filterable="false">
+                <CellTemplate>
+                    <MudText @onclick="@(() => RowCellClicked(context.Item.Id))">@context.Item.Id</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="@(item => item.FirstName)" Title="First Name">
+                <FilterTemplate>
+                    <TextInputTableFilter
+                        T="GetProviderDto"
+                        Context="context"
+                        FilterOpenState="AllProviderTableContextStore.FirstNameFilterOpen"
+                        FilterDefinitionState="_filterDefinition"
+                        FilterOptions="FilterOptions"
+                        UpdateFilterOptions="@(v => FilterOptions = v)"
+                        PropertyName="@AllProviderTableFilter.FirstName"
+                        FilterString="@FirstName"
+                        FilterStringChanged="@(v => FirstName = v)"
+                    />
+                </FilterTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="@(item => item.LastName)" Title="Last Name">
+                <FilterTemplate>
+                    <TextInputTableFilter
+                        T="GetProviderDto"
+                        Context="context"
+                        FilterOpenState="AllProviderTableContextStore.LastNameOpen"
+                        FilterDefinitionState="_filterDefinition"
+                        FilterOptions="FilterOptions"
+                        UpdateFilterOptions="@(v => FilterOptions = v)"
+                        PropertyName="@AllProviderTableFilter.LastName"
+                        FilterString="@LastName"
+                        FilterStringChanged="@(v => LastName = v)"
+                    />
+                </FilterTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="@(item => item.DateOfBirth)" Title="DOB">
+                <CellTemplate>
+                    @context.Item.DateOfBirth.ToString("MM/dd/yyyy")
+                </CellTemplate>
+
+                <FilterTemplate>
+                    <DateTableFilter
+                        T="GetProviderDto"
+                        Context="context"
+                        FilterOpenState="AllProviderTableContextStore.DateOfBirthFilterOpen"
+                        FilterDefinitionState="_filterDefinition"
+                        FilterOptions="FilterOptions"
+                        UpdateFilterOptions="@(v => FilterOptions = v)"
+                        PropertyName="@AllProviderTableFilter.DateOfBirth"
+                        FilterDateBefore="DateOfBirthBefore"
+                        FilterDateAfter="DateOfBirthAfter"
+                        FilterDateBeforeChanged="@(v => DateOfBirthBefore = v)"
+                        FilterDateAfterChanged="@(v => DateOfBirthAfter = v)"
+                        QueryParameterPropertyNameBeforeDate="DateOfBirthBefore"
+                        QueryParameterPropertyNameAfterDate="DateOfBirthAfter"
+                        />
+                </FilterTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="@(item => item.IsPrimaryPhoneNumberInService)" Title="Is Phone In Use">
+                <FilterTemplate>
+                    <BooleanTableFilter
+                        T="GetProviderDto"
+                        Context="context"
+                        FilterOpenState="AllProviderTableContextStore.IsPrimaryPhoneNumberInServiceFilterOpen"
+                        ValueChanged="@(v => IsPrimaryPhoneNumberInService = v)"
+                        FilterDefinitionState="_filterDefinition"
+                        FilterOptions="FilterOptions"
+                        UpdateFilterOptions="@(v => FilterOptions = v)"
+                        PropertyName="@AllProviderTableFilter.IsPrimaryPhoneNumberInService"
+                        BooleanFilter="@IsPrimaryPhoneNumberInService"
+                    />
+                </FilterTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="@(item => item.Discipline.Name)" Title="Discipline">
+                <FilterTemplate>
+                    <MultiSelectTableFilter
+                        T="GetProviderDto"
+                        Context="context"
+                        FilterOpenState="AllProviderTableContextStore.DisciplineFilterOpen"
+                        SelectedItems="AllProviderTableContextStore.SelectedDisciplineFilterItems"
+                        Options="AllProviderTableContextStore.Disciplines"
+                        FilterDefinitionState="_filterDefinition"
+                        UpdateSelectedItems="@(v => AllProviderTableContextStore.SelectedDisciplineFilterItems = v)"
+                        UpdateOptions="@(v => AllProviderTableContextStore.Disciplines = v)"
+                        FilterOptions="FilterOptions"
+                        UpdateFilterOptions="@(v => FilterOptions = v)"
+                        PropertyName="@AllProviderTableFilter.DisciplineId"
+                    />
+                </FilterTemplate>
+            </PropertyColumn>
+
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="GetProviderDto"/>
+        </PagerContent>
+    </MudDataGrid>
+}
+
 
 @code {
     
+    [CascadingParameter] 
+    public AllProviderTableStore AllProviderTableContextStore { get; set; } = new();
+    
+    // SupplyParameterFromQuery is only available on the component level
+    // It will not work if you force it down from the context store
+    [SupplyParameterFromQuery] string? FirstName { get; set; }
+    [SupplyParameterFromQuery] string? LastName { get; set; }
+    [SupplyParameterFromQuery] int? IsPrimaryPhoneNumberInService { get; set; }
+    [SupplyParameterFromQuery] DateTime? DateOfBirthBefore { get; set; }
+    [SupplyParameterFromQuery] DateTime? DateOfBirthAfter { get; set; }
+    
+    private bool _isLoadingAllDependencies = true;
+    
+    readonly FilterDefinition<GetProviderDto> _filterDefinition = new();
+    
+    public List<DataGridFilterDto> FilterOptions { get; set; } = new();
+    
+    private void RowCellClicked(int id)
+    {
+        Navigation.NavigateTo($"provider/{id}");
+    }
+    
+    protected override void OnInitialized()
+    {
+        foreach (var param in AllProviderTableContextStore.QueryParamFilterList)
+        {
+            var queryParamProperty = GetType().GetProperty(param.PropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (queryParamProperty != null)
+            {
+                var value = queryParamProperty.GetValue(this);
+
+                var propertyName = QueryParamHelper.FindPropertyName(
+                    AllProviderTableContextStore.QueryParamFilters, param.PropertyName
+                );
+                
+                var enumType = QueryParamHelper.GetEnumType(propertyName);
+                
+                
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = propertyName,
+                    Operator = param.Operator,
+                    Value = (param.Type == QueryParamTypeEnum.Enum && enumType != null && value != null) 
+                        ? Enum.ToObject(enumType, value) 
+                        : QueryParamHelper.QueryParameterValueConverter(param, value)
+                };
+
+                if (value != null)
+                {
+                    FilterOptions.Add(filterObj);
+                }
+            }
+        }
+    }
+
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var data = await DisciplineService.GetDisciplines();
+            var disciplineOptions = data.Select(x => new SelectOption { Id = x.Id, Name = x?.Name ?? "", Selected = false }).ToList();
+            disciplineOptions.Sort((a, b) => a.Id.CompareTo(b.Id));
+            AllProviderTableContextStore.Disciplines = disciplineOptions;
+            
+            _isLoadingAllDependencies = false;
+            
+            StateHasChanged();
+        }
+    }
+
+    private async Task<GridData<GetProviderDto>> LoadGridData(GridState<GetProviderDto> state)
+    {
+        AllProviderTableContextStore.RequestDto.Page = state.Page;
+        AllProviderTableContextStore.RequestDto.PageSize = state.PageSize;
+        AllProviderTableContextStore.RequestDto.Filter = state.FilterDefinitions;
+        
+        CustomFilterHelper.ProcessMultiSelectFilter(
+            AllProviderTableContextStore.SelectedDisciplineFilterItems, "DisciplineId", FilterOptions);
+        
+
+        foreach (var filterDefinition in state.FilterDefinitions)
+        {
+            if (filterDefinition != null)
+            {
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = filterDefinition?.Column?.PropertyName ?? "",
+                    Operator = filterDefinition?.Operator ?? "",
+                    Value = filterDefinition?.Value
+                };
+                FilterOptions.Add(filterObj);
+            }
+        }
+
+        var apiResponse = await ProviderService.GetProviderDataGrid(AllProviderTableContextStore.RequestDto, FilterOptions);
+        GridData<GetProviderDto> data = new()
+        {
+            Items = apiResponse.Items,
+            TotalItems = apiResponse.ItemTotalCount
+        };
+        StateHasChanged();
+        return data;
+    }
 }

@@ -139,7 +139,8 @@ public static class ExpressionBuilder
                 {
                     return typeof(string).GetMethod(name, new[] { typeof(string) });
                 }
-                
+
+                var toLowerMethod = typeof(string).GetMethod(nameof(string.ToLower), Type.EmptyTypes);
 
                 if (value is string str && string.IsNullOrEmpty(str) && isNullableRef)
                 {
@@ -147,23 +148,24 @@ public static class ExpressionBuilder
                 }
                 else
                 {
+                    // Lowercase property
+                    var propertyToLower = Expression.Call(property, toLowerMethod!);
+
+                    // Lowercase constant value
+                    var constantToLower = Expression.Constant((value?.ToString() ?? "").ToLower());
+
                     body = operationString.ToLower() switch
                     {
-                        "equals" => Expression.Equal(property, constant),
-                        "notequals" => Expression.NotEqual(property, constant),
-                        "contains" => Expression.Call(property, StringMethod(nameof(string.Contains))!,
-                            Expression.Constant(value?.ToString() ?? "")),
-                        "not contains" => Expression.Not(Expression.Call(property, StringMethod(nameof(string.Contains))!,
-                            Expression.Constant(value?.ToString() ?? ""))),
-                        "startswith" => Expression.Call(property, StringMethod(nameof(string.StartsWith))!,
-                            Expression.Constant(value?.ToString() ?? "")),
-                        "endswith" => Expression.Call(property, StringMethod(nameof(string.EndsWith))!,
-                            Expression.Constant(value?.ToString() ?? "")),
+                        "equals" => Expression.Equal(propertyToLower, constantToLower),
+                        "notequals" => Expression.NotEqual(propertyToLower, constantToLower),
+                        "contains" => Expression.Call(propertyToLower, StringMethod(nameof(string.Contains))!, constantToLower),
+                        "not contains" => Expression.Not(Expression.Call(propertyToLower, StringMethod(nameof(string.Contains))!, constantToLower)),
+                        "startswith" => Expression.Call(propertyToLower, StringMethod(nameof(string.StartsWith))!, constantToLower),
+                        "endswith" => Expression.Call(propertyToLower, StringMethod(nameof(string.EndsWith))!, constantToLower),
                         "is empty" => Expression.Call(typeof(string), nameof(string.IsNullOrEmpty), null, property),
-                        "is not empty" => Expression.Not(Expression.Call(typeof(string), nameof(string.IsNullOrEmpty), null,
-                            property)),
+                        "is not empty" => Expression.Not(Expression.Call(typeof(string), nameof(string.IsNullOrEmpty), null, property)),
                         _ => throw new NotSupportedException($"Operator '{operationString}' is not supported for string.")
-                    };   
+                    };
                 }
             }
            else

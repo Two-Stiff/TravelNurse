@@ -25,6 +25,7 @@ public static class JobsTableFilter
     public const string ExpiresOn = "ExpiresOn";
     public const string ExpiredOnDateBefore = "ExpiredOnDateBefore";
     public const string ExpiredOnDateAfter = "ExpiredOnDateAfter";
+    public const string DisciplineId = "DisciplineId";
 }
 
 public class JobTableStore
@@ -33,8 +34,6 @@ public class JobTableStore
     public MudDataGrid<GetJobDto> DataGrid = new();
     
     public readonly GridDataRequestDto<GetJobDto> RequestDto = new();
-    
-    public List<DataGridFilterDto> FilterOptions { get; set; } = new();
 
     public List<SelectOption> JobTypeEnumOptions = new List<SelectOption>();
     

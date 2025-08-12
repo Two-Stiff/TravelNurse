@@ -19,6 +19,7 @@ public static class AllProviderTableFilter
     public const string DateOfBirth = "DateOfBirth";
     public const string DateOfBirthBefore = "DateOfBirthBefore";
     public const string DateOfBirthAfter = "DateOfBirthAfter";
+    public const string DisciplineId = "DisciplineId";
 }
 
 public class AllProviderTableStore
@@ -26,7 +27,6 @@ public class AllProviderTableStore
     public MudDataGrid<GetProviderDto> DataGrid = new();
     
     public readonly GridDataRequestDto<GetProviderDto> RequestDto = new();
-    public List<DataGridFilterDto> FilterOptions { get; set; } = new();
     
     public readonly FilterDefinition<GetProviderDto> FilterDefinition = new();
 

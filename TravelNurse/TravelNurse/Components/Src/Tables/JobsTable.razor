@@ -40,8 +40,8 @@ else
                     Context="context"
                     FilterOpenState="JobTableContextStore.JobTitleFilterOpen"
                     FilterDefinitionState="_filterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="JobTitle"
                     FilterString="@JobTitle"
                     FilterStringChanged="@(v => JobTitle = v)"
@@ -55,8 +55,8 @@ else
                     Context="context"
                     FilterOpenState="JobTableContextStore.JobRequirementFilterOpen"
                     FilterDefinitionState="_filterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="Requirements"
                     FilterString="@Requirements"
                     FilterStringChanged="@(v => Requirements = v)"
@@ -74,8 +74,8 @@ else
                     SelectedValue="@JobType"
                     FilterDefinitionState="_filterDefinition"
                     FilterOpenState="JobTableContextStore.JobTypeFilterOpen"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     ValueChanged="@(v => JobType = v)" />
 
             </FilterTemplate>
@@ -89,8 +89,8 @@ else
                     FilterOpenState="JobTableContextStore.HousingProvidedFilterOpen"
                     ValueChanged="@(v => HousingProvided = v)"
                     FilterDefinitionState="_filterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="@JobsTableFilter.HousingProvided"
                     BooleanFilter="@HousingProvided"
                 />
@@ -105,8 +105,8 @@ else
                     FilterOpenState="JobTableContextStore.HideExternallyFilterOpen"
                     ValueChanged="@(v => HideExternally = v)"
                     FilterDefinitionState="_filterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="@JobsTableFilter.HideExternally"
                     BooleanFilter="@HideExternally"
                 />
@@ -124,8 +124,8 @@ else
                     Context="context"
                     FilterOpenState="JobTableContextStore.ContractLengthFilterOpen"
                     FilterDefinitionState="_filterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="@JobsTableFilter.ContractLengthWeeks"
                     FilterString="@ContractLengthWeeks"
                     FilterStringChanged="@(v => ContractLengthWeeks = v)"
@@ -144,9 +144,9 @@ else
                     T="GetJobDto"
                     Context="context"
                     FilterOpenState="JobTableContextStore.StartDateFilterOpen"
-                    FilterDefinitionState="JobTableContextStore.FilterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="@JobsTableFilter.StartDate"
                     FilterDateBefore="StartDateBefore"
                     FilterDateAfter="StartDateAfter"
@@ -168,9 +168,9 @@ else
                     T="GetJobDto"
                     Context="context"
                     FilterOpenState="JobTableContextStore.ExpireOnFilterOpen"
-                    FilterDefinitionState="JobTableContextStore.FilterDefinition"
-                    FilterOptions="JobTableContextStore.FilterOptions"
-                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     PropertyName="@JobsTableFilter.ExpiresOn"
                     FilterDateBefore="ExpiredOnDateBefore"
                     FilterDateAfter="ExpiredOnDateAfter"
@@ -195,6 +195,9 @@ else
                     FilterDefinitionState="_filterDefinition"
                     UpdateSelectedItems="@(v => JobTableContextStore.SelectedDisciplineFilterItems = v)"
                     UpdateOptions="@(v => JobTableContextStore.Disciplines = v)"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
+                    PropertyName="@JobsTableFilter.DisciplineId"
                 />
             </FilterTemplate>
         </PropertyColumn>
@@ -248,6 +251,8 @@ else
 
     List<SelectOption> _jobTypeEnumOptions = [];
     
+    public List<DataGridFilterDto> FilterOptions { get; set; } = new();
+    
     
     readonly FilterDefinition<GetJobDto> _filterDefinition = new();
     
@@ -287,7 +292,7 @@ else
 
                 if (value != null)
                 {
-                    JobTableContextStore.FilterOptions.Add(filterObj);
+                    FilterOptions.Add(filterObj);
                 }
             }
         }
@@ -318,10 +323,10 @@ else
 
             // Custom table filter section
             CustomFilterHelper.ProcessMultiSelectFilter(
-                JobTableContextStore.SelectedDisciplineFilterItems, "DisciplineId", JobTableContextStore.FilterOptions);
+                JobTableContextStore.SelectedDisciplineFilterItems, "DisciplineId", FilterOptions);
             
             CustomFilterHelper.ProcessMultiSelectFilter(
-                JobTableContextStore.SelectedPlatformFilterItems, "PlatformId", JobTableContextStore.FilterOptions);
+                JobTableContextStore.SelectedPlatformFilterItems, "PlatformId", FilterOptions);
             
             // This for each loop is used to handle default table filters
             foreach (var filterDefinition in state.FilterDefinitions)
@@ -334,11 +339,11 @@ else
                         Operator = filterDefinition?.Operator ?? "",
                         Value = filterDefinition?.Value
                     };
-                    JobTableContextStore.FilterOptions.Add(filterObj);
+                    FilterOptions.Add(filterObj);
                 }
             }
 
-            var apiResponse = await JobService.GetJobDataGrid(JobTableContextStore.RequestDto, JobTableContextStore.FilterOptions);
+            var apiResponse = await JobService.GetJobDataGrid(JobTableContextStore.RequestDto, FilterOptions);
             GridData<GetJobDto> data = new()
             {
                 Items = apiResponse.Items,

@@ -1,9 +1,10 @@
+using Core.Dto;
 using Core.Utils;
 using TravelNurseServer.Dtos.Common.Get;
 
 namespace TravelNurseServer.Dtos.Providers.Get;
 
-public class GetProviderDto
+public class GetProviderDto : BaseGetDto
 
 {
     public string? PreferredFirstName { get; set; }
