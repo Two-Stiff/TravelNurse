@@ -28,25 +28,25 @@ public class DatabaseContext : DbContext
             fk.DeleteBehavior = DeleteBehavior.NoAction;
         }
 
-        LambdaExpression filterExpr = 
-            (Expression<Func<Entity, bool>>)(
-            e => e.DeletedOn.CompareTo(Constants.DefaultDateTime) == 0
-            );
+        //LambdaExpression filterExpr = 
+          //  (Expression<Func<Entity, bool>>)(
+           // e => e.DeletedOn.CompareTo(Constants.DefaultDateTime) == 0
+            //);
 
-        foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes()
-                     .Where(x => x.ClrType.IsAssignableTo(typeof(Entity))))
-        {
-            var parameter = Expression.Parameter(mutableEntityType.ClrType);
-            var body = ReplacingExpressionVisitor.Replace(
-                filterExpr.Parameters.First(),
-                parameter,
-                filterExpr.Body
-            );
-
-            var lambdaExpression = Expression.Lambda(body, parameter);
-            
-            mutableEntityType.SetQueryFilter(lambdaExpression);
-        }
+        // foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes()
+        //              .Where(x => x.ClrType.IsAssignableTo(typeof(Entity))))
+        // {
+        //     var parameter = Expression.Parameter(mutableEntityType.ClrType);
+        //     var body = ReplacingExpressionVisitor.Replace(
+        //         filterExpr.Parameters.First(),
+        //         parameter,
+        //         filterExpr.Body
+        //     );
+        //
+        //     var lambdaExpression = Expression.Lambda(body, parameter);
+        //     
+        //     mutableEntityType.SetQueryFilter(lambdaExpression);
+        // }
     }
 
     public override int SaveChanges()
@@ -77,30 +77,30 @@ public class DatabaseContext : DbContext
                         && x.State != EntityState.Unchanged 
                         && x.State != EntityState.Detached).ToList();
 
-        foreach (var entry in entities)
-        {
-            var now = DateTime.UtcNow;
-
-            var hardDeleteEnabled = Attribute.IsDefined(entry.Entity.GetType(), typeof(EnableHardDeleteAttribute));
-
-            switch (entry.State)
-            {  
-                case EntityState.Deleted:
-                    if (hardDeleteEnabled == false)
-                    {
-                        ((Entity)entry.Entity).DeletedOn = now;
-                    }
-
-                    break;
-                case EntityState.Modified:
-                    ((Entity)entry.Entity).ModifiedOn = now;
-                    break;
-                case EntityState.Added:
-                    ((Entity)entry.Entity).CreatedOn = now;
-                    ((Entity)entry.Entity).ModifiedOn = now;
-                    ((Entity)entry.Entity).DeletedOn = now;
-                    break;
-            }
-        }
+        // foreach (var entry in entities)
+        // {
+        //     var now = DateTime.UtcNow;
+        //
+        //     var hardDeleteEnabled = Attribute.IsDefined(entry.Entity.GetType(), typeof(EnableHardDeleteAttribute));
+        //
+        //     switch (entry.State)
+        //     {  
+        //         case EntityState.Deleted:
+        //             if (hardDeleteEnabled == false)
+        //             {
+        //                 ((Entity)entry.Entity).DeletedOn = now;
+        //             }
+        //
+        //             break;
+        //         case EntityState.Modified:
+        //             ((Entity)entry.Entity).ModifiedOn = now;
+        //             break;
+        //         case EntityState.Added:
+        //             ((Entity)entry.Entity).CreatedOn = now;
+        //             ((Entity)entry.Entity).ModifiedOn = now;
+        //             ((Entity)entry.Entity).DeletedOn = now;
+        //             break;
+        //     }
+        // }
     }
 }

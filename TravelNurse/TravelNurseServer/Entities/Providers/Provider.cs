@@ -6,7 +6,7 @@ using TravelNurseServer.Entities.Common;
 
 namespace TravelNurseServer.Entities.Providers;
 
-[Index(nameof(FirstName), nameof(LastName), nameof(DeletedOn))]
+[Index(nameof(FirstName), nameof(LastName))]
 public class Provider : Entity
 {
     [MaxLength(1000)]

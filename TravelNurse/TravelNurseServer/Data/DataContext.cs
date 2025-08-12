@@ -5,13 +5,13 @@ using TravelNurseServer.Entities.Providers;
 
 namespace TravelNurseServer.Data;
 
-public class DataContext : DatabaseContext
+public class DataContext (DbContextOptions<DataContext> options) : DbContext(options)
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
-    {
-        
-    }
-    
+    // public DataContext(DbContextOptions<DataContext> options) : base(options)
+    // {
+    //     
+    // }
+    //
     public DbSet<Provider> Providers => Set<Provider>();
     
     public DbSet<Discipline> Disciplines => Set<Discipline>();

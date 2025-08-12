@@ -1,80 +1,80 @@
 
 -- Discipline ---> "DIAGNOSTIC IMAGING"
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('CATH LAB TECH', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('CT', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('ECHO', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('MAMMOGRAPHY', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('MRI', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Nuclear Medicine', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('ULTRASOUND TECHNOLOGISTS', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('VASCULAR TECHNOLOGIST', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('X-RAY', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('UNCATEGORIZED', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Electrophysiology', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Interventional Radiology Tech', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('MANAGER', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('CATH LAB TECH', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('CT', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('ECHO', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('MAMMOGRAPHY', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('MRI', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Nuclear Medicine', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('ULTRASOUND TECHNOLOGISTS', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('VASCULAR TECHNOLOGIST', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('X-RAY', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('UNCATEGORIZED', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Electrophysiology', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Interventional Radiology Tech', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('MANAGER', '', TRUE);
 
 -- "CARDIOPULMONARY"
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Respiratory Therapist - RRT', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Respiratory Therapist - CRT', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Respiratory Therapist - RRT', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Respiratory Therapist - CRT', '', TRUE);
 -- MEDICAL LABORATORY
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Cyto Tech', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Histo Tech', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Med Lab Tech', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Med Tech', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PHLEBOTOMIST', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Pathology Assistant', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Lab Director', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Microbiologist', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Laboratory Assistant', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Cyto Tech', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Histo Tech', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Med Lab Tech', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Med Tech', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PHLEBOTOMIST', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Pathology Assistant', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Lab Director', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Microbiologist', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Laboratory Assistant', '', TRUE);
 
 -- ONCOLOGY
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('DOSIMETRIST', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PHYSICIST', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('RADIATION THERAPIST', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('DOSIMETRIST', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PHYSICIST', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('RADIATION THERAPIST', '', TRUE);
 
 -- REHAB THERAPY
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('COTA', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Occupational Therapist', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PTA', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Physical Therapist', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('SLP', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Rehab Director', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('COTA', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Occupational Therapist', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PTA', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Physical Therapist', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('SLP', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Rehab Director', '', TRUE);
 
 -- NEURODIAGNOSTIC
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('EEG', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('EKG', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Polysomnography', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('EEG', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('EKG', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Polysomnography', '', TRUE);
 
 -- RN
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('OR - OPERATING ROOM', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('ER - EMERGENCY ROOM', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('ICU - INTENSIVE CARE', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('M/S - MEDICAL SURGICAL', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PEDS - PEDIATRICS', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PACU/RECOVERY', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('NICU - NEONATAL INTENSIVE CARE', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PICU - PEDIATRIC INTENSIVE CARE', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('L&D - LABOR AND DELIVERY', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('OR TECH', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PSYCH', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Radiology', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('Oncology', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('POST PARTUM', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('TELEMETRY', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('TCU-TRANSITIONAL CARE', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('PCU-PROGRESSIVE CARE', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('CATH LAB', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('OB', '', TRUE, NOW(), NOW(), '1776-07-16');
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn") VALUES ('DIALYSIS', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('OR - OPERATING ROOM', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('ER - EMERGENCY ROOM', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('ICU - INTENSIVE CARE', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('M/S - MEDICAL SURGICAL', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PEDS - PEDIATRICS', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PACU/RECOVERY', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('NICU - NEONATAL INTENSIVE CARE', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PICU - PEDIATRIC INTENSIVE CARE', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('L&D - LABOR AND DELIVERY', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('OR TECH', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PSYCH', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Radiology', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('Oncology', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('POST PARTUM', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('TELEMETRY', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('TCU-TRANSITIONAL CARE', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('PCU-PROGRESSIVE CARE', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('CATH LAB', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('OB', '', TRUE);
+INSERT INTO "Specialties" ("Name", "Description", "IsActive") VALUES ('DIALYSIS', '', TRUE);
 
 
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn")
-VALUES ('PHARMACIST', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive")
+VALUES ('PHARMACIST', '', TRUE);
 
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn")
-VALUES ('PHARMACY TECH', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive")
+VALUES ('PHARMACY TECH', '', TRUE);
 
-INSERT INTO "Specialties" ("Name", "Description", "IsActive", "CreatedOn", "ModifiedOn", "DeletedOn")
-VALUES ('UNCATEGORIZED', '', TRUE, NOW(), NOW(), '1776-07-16');
+INSERT INTO "Specialties" ("Name", "Description", "IsActive")
+VALUES ('UNCATEGORIZED', '', TRUE);
 

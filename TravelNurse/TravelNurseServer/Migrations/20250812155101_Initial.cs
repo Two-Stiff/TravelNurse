@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TravelNurseServer.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_Creation : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,10 +20,7 @@ namespace TravelNurseServer.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Abbreviation = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Name = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    IsForProvider = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    IsForProvider = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,10 +35,7 @@ namespace TravelNurseServer.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     Description = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,10 +49,7 @@ namespace TravelNurseServer.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Abbreviation = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Abbreviation = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,10 +63,7 @@ namespace TravelNurseServer.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DisciplineId = table.Column<int>(type: "integer", nullable: false),
-                    SpecialtyId = table.Column<int>(type: "integer", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    SpecialtyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,12 +72,14 @@ namespace TravelNurseServer.Migrations
                         name: "FK_DisciplineSpecialties_Disciplines_DisciplineId",
                         column: x => x.DisciplineId,
                         principalTable: "Disciplines",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DisciplineSpecialties_Specialties_SpecialtyId",
                         column: x => x.SpecialtyId,
                         principalTable: "Specialties",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,10 +90,7 @@ namespace TravelNurseServer.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     HasFellowShip = table.Column<bool>(type: "boolean", nullable: true),
-                    SpecialtyId = table.Column<int>(type: "integer", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    SpecialtyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,7 +99,8 @@ namespace TravelNurseServer.Migrations
                         name: "FK_SubSpecialties_Specialties_SpecialtyId",
                         column: x => x.SpecialtyId,
                         principalTable: "Specialties",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,10 +141,7 @@ namespace TravelNurseServer.Migrations
                     TravelerId = table.Column<int>(type: "integer", nullable: true),
                     LastRecruiterId = table.Column<int>(type: "integer", nullable: true),
                     DisciplineId = table.Column<int>(type: "integer", nullable: true),
-                    IsPriority = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    IsPriority = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -204,9 +189,9 @@ namespace TravelNurseServer.Migrations
                 column: "DisciplineId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Providers_FirstName_LastName_DeletedOn",
+                name: "IX_Providers_FirstName_LastName",
                 table: "Providers",
-                columns: new[] { "FirstName", "LastName", "DeletedOn" });
+                columns: new[] { "FirstName", "LastName" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Providers_Id",

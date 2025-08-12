@@ -1,16 +1,10 @@
 INSERT INTO "DisciplineSpecialties" (
     "DisciplineId",
-    "SpecialtyId",
-    "CreatedOn",
-    "ModifiedOn",
-    "DeletedOn"
+    "SpecialtyId"
 )
 SELECT
     d."Id",
-    sp."Id",
-    now(),
-    now(),
-    '1776-07-16'::date
+    sp."Id"
 FROM
     "Disciplines" d
         CROSS JOIN "Specialties" sp
@@ -24,17 +18,11 @@ WHERE
 
 INSERT INTO "DisciplineSpecialties" (
     "DisciplineId",
-    "SpecialtyId",
-    "CreatedOn",
-    "ModifiedOn",
-    "DeletedOn"
+    "SpecialtyId"
 )
 SELECT
     d."Id",
-    sp."Id",
-    now(),
-    now(),
-    '1776-07-16'::date
+    sp."Id"
 FROM
     "Disciplines" d
         CROSS JOIN "Specialties" sp
@@ -45,17 +33,11 @@ WHERE
 
 INSERT INTO "DisciplineSpecialties" (
     "DisciplineId",
-    "SpecialtyId",
-    "CreatedOn",
-    "ModifiedOn",
-    "DeletedOn"
+    "SpecialtyId"
 )
 SELECT
     d."Id",
-    sp."Id",
-    now(),
-    now(),
-    '1776-07-16'::date
+    sp."Id"
 FROM
     "Disciplines" d
         CROSS JOIN "Specialties" sp
@@ -67,17 +49,11 @@ WHERE
 
 INSERT INTO "DisciplineSpecialties" (
     "DisciplineId",
-    "SpecialtyId",
-    "CreatedOn",
-    "ModifiedOn",
-    "DeletedOn"
+    "SpecialtyId"
 )
 SELECT
     d."Id",
-    sp."Id",
-    now(),
-    now(),
-    '1776-07-16'::date
+    sp."Id"
 FROM
     "Disciplines" d
         CROSS JOIN "Specialties" sp

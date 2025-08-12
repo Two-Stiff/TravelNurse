@@ -35,17 +35,8 @@ namespace TravelNurseServer.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DeletedOn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<bool>("IsForProvider")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -67,17 +58,8 @@ namespace TravelNurseServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DeletedOn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("DisciplineId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("SpecialtyId")
                         .HasColumnType("integer");
@@ -101,12 +83,6 @@ namespace TravelNurseServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DeletedOn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(4000)
@@ -114,9 +90,6 @@ namespace TravelNurseServer.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -143,15 +116,6 @@ namespace TravelNurseServer.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DeletedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -172,17 +136,8 @@ namespace TravelNurseServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DeletedOn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<bool?>("HasFellowShip")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -227,13 +182,7 @@ namespace TravelNurseServer.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DeletedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("DisciplineId")
@@ -278,9 +227,6 @@ namespace TravelNurseServer.Migrations
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaycomEeCode")
                         .IsRequired()
@@ -364,7 +310,7 @@ namespace TravelNurseServer.Migrations
 
                     b.HasIndex("TemporaryStateId");
 
-                    b.HasIndex("FirstName", "LastName", "DeletedOn");
+                    b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Providers");
                 });
@@ -374,13 +320,13 @@ namespace TravelNurseServer.Migrations
                     b.HasOne("TravelNurseServer.Entities.Common.Discipline", "Discipline")
                         .WithMany()
                         .HasForeignKey("DisciplineId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TravelNurseServer.Entities.Common.Specialty", "Specialty")
                         .WithMany("DisciplineSpecialties")
                         .HasForeignKey("SpecialtyId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Discipline");
@@ -393,7 +339,7 @@ namespace TravelNurseServer.Migrations
                     b.HasOne("TravelNurseServer.Entities.Common.Specialty", "Specialty")
                         .WithMany("SubSpecialties")
                         .HasForeignKey("SpecialtyId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Specialty");
