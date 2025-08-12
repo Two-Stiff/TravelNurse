@@ -14,10 +14,4 @@ public class Discipline : Entity
     public string Name { get; set; } = Constants.DefaultString;
     
     public bool IsForProvider { get; set; } = Constants.DefaultBoolean;
-    
-    public DateTime CreatedOn { get; set; } = Constants.DefaultDateTime;
-    
-    public DateTime ModifiedOn { get; set; } = Constants.DefaultDateTime;
-    
-    public DateTime DeletedOn { get; set; } = Constants.DefaultDateTime;
 }
