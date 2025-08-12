@@ -1,6 +1,9 @@
 using AutoMapper;
 using TravelNurseServer.Dtos.Common.Get;
+using TravelNurseServer.Dtos.Jobs.Get;
 using TravelNurseServer.Entities.Common;
+using TravelNurseServer.Entities.Jobs;
+
 namespace TravelNurseServer.Dtos;
 
 public class ServerAutoMapperProfile : Profile
@@ -11,5 +14,8 @@ public class ServerAutoMapperProfile : Profile
         CreateMap<DisciplineSpecialty, GetDisciplineSpecialtyDto>().ReverseMap();
         CreateMap<Specialty, GetSpecialtyDto>().ReverseMap();
         CreateMap<SubSpecialty, GetSubSpecialtyDto>().ReverseMap();
+        
+        CreateMap<Facility, GetFacilityDto>().ReverseMap();
+        CreateMap<Job, GetJobDto>().ReverseMap();
     }
 }

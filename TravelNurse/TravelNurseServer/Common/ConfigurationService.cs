@@ -7,6 +7,7 @@ public static class ConfigurationService
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddScoped<IDisciplineService, DisciplineService>();
+        services.AddScoped<IJobService, JobService>();
 
         return services;
     }

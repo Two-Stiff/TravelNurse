@@ -1,6 +1,7 @@
 using Core.Data;
 using Microsoft.EntityFrameworkCore;
 using TravelNurseServer.Entities.Common;
+using TravelNurseServer.Entities.Jobs;
 using TravelNurseServer.Entities.Providers;
 
 namespace TravelNurseServer.Data;
@@ -23,6 +24,12 @@ public class DataContext (DbContextOptions<DataContext> options) : DbContext(opt
     public DbSet<State> States => Set<State>();
     
     public DbSet<SubSpecialty> SubSpecialties => Set<SubSpecialty>();
+    
+    public DbSet<Facility> Facilities => Set<Facility>();
+    
+    public DbSet<Job> Jobs => Set<Job>();
+    
+    public DbSet<JobSubSpecialty> JobSubSpecialties => Set<JobSubSpecialty>();
     
 
 }
