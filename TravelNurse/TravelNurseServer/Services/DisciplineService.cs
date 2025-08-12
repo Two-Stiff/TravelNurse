@@ -9,10 +9,10 @@ namespace TravelNurseServer.Services;
 public interface IDisciplineService
 {
     Task<List<GetDisciplineDto>> GetDisciplines();
-    //
-    // Task<List<GetDisciplineSpecialtyDto>> GetDisciplineSpecialties(int disciplineId);
-    //
-    // Task<List<GetSubSpecialtyDto>> GetSubSpecialties(int specialtyId);
+    
+    Task<List<GetDisciplineSpecialtyDto>> GetDisciplineSpecialties(int disciplineId);
+    
+    Task<List<GetSubSpecialtyDto>> GetSubSpecialties(int specialtyId);
 }
 
 
@@ -36,5 +36,27 @@ public class DisciplineService: IDisciplineService
         var data = await context.Disciplines.ToListAsync();
         var res = _mapper.Map<List<GetDisciplineDto>>(data);
         return res;
+    }
+    
+    public async Task<List<GetDisciplineSpecialtyDto>> GetDisciplineSpecialties(int disciplineId)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+        var data = await context.DisciplineSpecialties
+            .Include(x => x.Specialty)
+            .Where(x => x.DisciplineId == disciplineId)
+            .ToListAsync();
+        
+        return _mapper.Map<List<GetDisciplineSpecialtyDto>>(data);
+    }
+
+    public async Task<List<GetSubSpecialtyDto>> GetSubSpecialties(int specialtyId)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+        var data = await context.SubSpecialties
+            .Where(x => x.SpecialtyId == specialtyId)
+            .ToListAsync();
+        
+        return _mapper.Map<List<GetSubSpecialtyDto>>(data);
+
     }
 }

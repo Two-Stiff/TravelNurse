@@ -8,5 +8,8 @@ public class ServerAutoMapperProfile : Profile
     public ServerAutoMapperProfile()
     {
         CreateMap<Discipline, GetDisciplineDto>().ReverseMap();
+        CreateMap<DisciplineSpecialty, GetDisciplineSpecialtyDto>().ReverseMap();
+        CreateMap<Specialty, GetSpecialtyDto>().ReverseMap();
+        CreateMap<SubSpecialty, GetSubSpecialtyDto>().ReverseMap();
     }
 }
