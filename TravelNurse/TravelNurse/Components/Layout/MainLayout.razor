@@ -1,23 +1,213 @@
-﻿@inherits LayoutComponentBase
+﻿@inject NavigationManager Navigation
+@inject IDialogService DialogService
+@using System.Text.RegularExpressions
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
+<MudThemeProvider IsDarkMode="_isDarkMode" />
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+@* Required *@
+<MudPopoverProvider/>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+@* Needed for dialogs *@
+<MudDialogProvider/>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+@* Needed for snackbars *@
+<MudSnackbarProvider/>
+
+<MudBreakpointProvider OnBreakpointChanged="BreakpointChanged"/>
+
+<MudLayout>
+    <MudAppBar>
+        <MudStack Row
+                  Style="width: 100%;"
+                  Justify="Justify.FlexEnd" AlignItems="AlignItems.Center">
+            @if (_isMobileView)
+            {
+                <MudIconButton Icon="@Icons.Material.TwoTone.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                               OnClick="@_ToggleNavigationDrawer"/>
+                
+            }
+
+            @* For Debugging responsive design *@
+            @* Please don't delete this *@
+            
+            @* @if (!_isMobileView) *@
+            @* { *@
+            @*     <p>@_currentRoute Page - Desk view {@_breakpoint}</p> *@
+            @* } *@
+            @* else *@
+            @* { *@
+            @*     <p>@_currentRoute Page - Mobile view {@_breakpoint}</p> *@
+            @* } *@
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false"
+                       OnClick="@UserPermissionInfoDrawerToggle">
+                <i class="fa-solid fa-user"></i>
+            </MudButton>
+            <MudPopover
+                Open="_openUserPermissionInfoDrawer" OverflowBehavior="OverflowBehavior.FlipAlways"
+                AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Paper="false">
+
+                <MudPaper Outlined="true" Class="px-4 py-8 w-3xs">
+                    <MudSwitch @bind-Value="_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool"
+                               Label="Theme"/>
+                </MudPaper>
+            </MudPopover>
+
+        </MudStack>
+
+    </MudAppBar>
+
+
+    <MudPaper Style="overflow:hidden; position:relative;" MinHeight="calc(100vh);">
+        <MudDrawerContainer>
+            <MudDrawer @bind-Open="@_openNavigationDrawer" Overlay="false" Elevation="1" 
+                       Variant="@DrawerVariant.Mini"
+                       OpenMiniOnHover="@EnableHoverToOpen()"
+                       Style="overflow-x: hidden; min-width: 70px;"
+            >
+                <MudDrawerHeader
+                Style="display: flex; justify-content: center; align-items: center;"
+                    >
+                    <MudIconButton Icon="@Icons.Material.TwoTone.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                                   OnClick="@_ToggleNavigationDrawer"/>
+
+                    <Logo />
+                </MudDrawerHeader>
+                <MudNavMenu>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Home">
+                        Home
+                    </MudNavLink>
+
+                    <MudNavGroup Title="Jobs" Expanded="false" Icon="@Icons.Material.TwoTone.Folder">
+                        <MudNavLink Href="/createLocumJob" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.FileOpen">
+                            Create Job
+                        </MudNavLink>
+
+                        <MudNavLink Href="/allJobs" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Tablet">
+                            Locum Jobs
+                        </MudNavLink>
+                    </MudNavGroup>
+
+                    <MudNavGroup Title="Providers" Expanded="false" Icon="@Icons.Material.TwoTone.EmojiPeople">
+                        <MudNavLink Href="/allProviders" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.PeopleOutline">
+                            Locum Providers
+                        </MudNavLink>    
+                    </MudNavGroup>
+                    
+
+                    <MudNavGroup Title="Examples" Expanded="false" Icon="@Icons.Material.TwoTone.Person">
+                        <MudNavLink Href="/exampleTable" Icon="@Icons.Material.TwoTone.PersonSearch">
+                            All Players
+                        </MudNavLink>
+                    </MudNavGroup>
+
+                </MudNavMenu>
+            </MudDrawer>
+        </MudDrawerContainer>
+
+        <MudMainContent>
+            <div
+                style="display: flex; align-items: center; margin-left: 80px; margin-right: 60px;"
+                >
+                    <div
+                        style="display: flex; flex-direction: column; flex-grow: 1; gap: 1rem; justify-content: center; align-items: center; padding: 1.5rem;">
+                        @Body
+                    </div>
+            </div>
+            
+        </MudMainContent>
+    </MudPaper>
+</MudLayout>
+
+@code {
+    private string _currentRoute = "";
+    private static bool _isDarkMode = true;
+    bool _drawerOpen = true;
+
+    private string _breakpoint = "";
+
+    private bool _showPopUpButton;
+
+    private bool _openUserPermissionInfoDrawer;
+
+
+    private void UserPermissionInfoDrawerToggle()
+    {
+        _openUserPermissionInfoDrawer = !_openUserPermissionInfoDrawer;
+    }
+    
+    private bool _openNavigationDrawer;
+
+    private void _ToggleNavigationDrawer()
+    {
+        _openNavigationDrawer = !_openNavigationDrawer;
+    }
+    
+
+    private bool _isMobileView;
+
+    private bool EnableHoverToOpen() => _isMobileView == false;
+    
+    private void BreakpointChanged(Breakpoint breakpoint)
+    {
+        switch (breakpoint)
+        {
+            case Breakpoint.Xl:
+                _breakpoint = "XL";
+                _isMobileView = false;
+                break;
+            case Breakpoint.Lg:
+                _breakpoint = "LG";
+                _isMobileView = false;
+                break;
+            case Breakpoint.Md:
+                _breakpoint = "MD";
+                _isMobileView = false;
+                break;
+            case Breakpoint.Sm:
+                _breakpoint = "SM";
+                _isMobileView = true;
+                break;
+            case Breakpoint.Xs:
+                _breakpoint = "XS";
+                _isMobileView = true;
+                break;
+                
+        }
+        _openNavigationDrawer = false;
+        
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var route = Navigation.ToBaseRelativePath(Navigation.Uri);
+            var cleanedRoute = Regex.Replace(route, @"\?.*$", "");
+            _currentRoute = cleanedRoute == "" ? "Home" : char.ToUpper(cleanedRoute[0]) + cleanedRoute.Substring(1);
+            Navigation.LocationChanged += OnLocationChanged;
+            
+        }
+    }
+    
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        var route = Navigation.ToBaseRelativePath(e.Location);
+        var cleanedRoute = Regex.Replace(route, @"\?.*$", "");
+        _currentRoute = cleanedRoute == "" ? "Home" : char.ToUpper(cleanedRoute[0]) + cleanedRoute.Substring(1);
+        InvokeAsync(StateHasChanged); // Refresh the UI
+    }
+
+    private void LogOut()
+    {
+        Navigation.NavigateTo("https://localhost:61349/api/auth/logout");
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+
+}

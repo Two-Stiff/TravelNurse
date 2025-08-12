@@ -1,10 +1,24 @@
+using MudBlazor.Services;
 using TravelNurse.Components;
+using TravelNurseServer.Common;
+using TravelNurseServer.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Adding MudBlazor to the project
+builder.Services.AddMudServices();
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+//
+//
+// builder.Services.AddAutoMapper(typeof(ServerAutoMapperProfile));
+// builder.Services.ConfigureServices();
 
 var app = builder.Build();
 
