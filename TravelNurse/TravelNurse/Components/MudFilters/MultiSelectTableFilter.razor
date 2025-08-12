@@ -1,0 +1,130 @@
+@using TravelNurseServer.Helpers
+@typeparam T
+@inject ISnackbar Snackbar
+
+
+<MudStack 
+    Justify="Justify.Center" AlignItems="AlignItems.Center" Row="true"
+    >
+    @if (SelectedItems.Count > 0)
+    {
+        <MudIconButton
+            Icon="@Icons.Material.TwoTone.FilterVintage"
+            Size="@Size.Small"
+            Disabled="true"
+        />
+    }
+
+    <MudIconButton OnClick="@OpenFilter" Icon="@Icons.Material.Outlined.FilterAlt" Size="@Size.Small"/>
+    <MudIconButton 
+        OnClick="@(() => ClearFilterAsync(Context))" Icon="@Icons.Material.TwoTone.FilterAltOff" Size="@Size.Small" />
+
+</MudStack>
+
+<MudOverlay Visible="@FilterOpenState" OnClick="@(() => FilterOpenState = false)"/>
+<MudPopover Open="@FilterOpenState" AnchorOrigin="Origin.BottomCenter"
+            TransformOrigin="Origin.TopCenter"
+            Style="width:300px">
+    <MudStack
+        Spacing="0"
+        Style="overflow-y:auto;max-height:250px">
+        @foreach (var option in Options)
+        {
+            <MudCheckBox
+                T="bool"
+                Label="@($"{option.Name}")"
+                Value="@(option.Selected)"
+                ValueChanged="@(value => SelectedChanged(option, value, SelectedItems))"/>
+        }
+    </MudStack>
+    <MudStack Row="true">
+        <MudButton OnClick="@(() => ClearFilterAsync(Context))">Clear</MudButton>
+        <MudButton Color="@Color.Primary" OnClick="@(() => ApplyFilterAsync(Context))">
+            Filter
+        </MudButton>
+    </MudStack>
+</MudPopover>
+
+@code {
+    [Parameter] 
+    public FilterContext<T>  Context { get; set; } = default!;
+
+    [Parameter] 
+    public bool FilterOpenState { get; set; } = false;
+    
+    [Parameter] 
+    public HashSet<SelectOption> SelectedItems { get; set; } = new();
+
+    [Parameter] 
+    public List<SelectOption> Options { get; set; } = new();
+    
+    [Parameter]
+    public FilterDefinition<T>  FilterDefinitionState { get; set; } = new FilterDefinition<T>();
+    
+    
+    [Parameter] 
+    public EventCallback<HashSet<SelectOption>> UpdateSelectedItems { get; set; }
+    
+    [Parameter] 
+    public EventCallback<List<SelectOption>> UpdateOptions { get; set; }
+    
+    
+    void OpenFilter() => FilterOpenState = !FilterOpenState;
+    
+    private void SelectedChanged(SelectOption item, bool value, HashSet<SelectOption> filterList)
+    {
+        if (filterList.Contains(item))
+        {
+            filterList.Remove(item);
+        }
+        else
+        {
+            filterList.Add(item);
+        }
+
+        var selectedDiscipline = Options.Find(x => x.Id == item.Id);
+        var newList = Options.Where(x => x.Id != item.Id).ToList();
+
+        if (selectedDiscipline != null)
+        {
+            selectedDiscipline.Selected = value;
+            newList.Add(selectedDiscipline);
+        }
+
+        newList.Sort((a, b) => a.Id.CompareTo(b.Id));
+        Options = newList;    
+        
+        
+        StateHasChanged();
+    }
+
+    private async Task ApplyFilterAsync(FilterContext<T> context)
+    {
+        try
+        {
+            await context.Actions.ApplyFilterAsync(FilterDefinitionState);
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add(e.Message, Severity.Error);
+        }
+    }
+
+    private async Task ClearFilterAsync(FilterContext<T> context)
+    {
+        await UpdateSelectedItems.InvokeAsync(new HashSet<SelectOption>());
+        SelectedItems = new HashSet<SelectOption>();
+        var newOptions = Options.Select(x => new SelectOption()
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Selected = false,
+            Disabled = false
+        });
+        await UpdateOptions.InvokeAsync(newOptions.ToList());
+        await context.Actions.ApplyFilterAsync(FilterDefinitionState);
+            
+        StateHasChanged();
+    } 
+    
+}

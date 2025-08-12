@@ -1,0 +1,352 @@
+@using System.Reflection
+@using TravelNurse.Components.Common.Enums
+@using TravelNurse.Components.Common.Services
+@using TravelNurse.Components.Common.Utils
+@using TravelNurse.Components.MudFilters
+@using TravelNurseServer.Dtos.Jobs.Get
+@using TravelNurseServer.Dtos.TablePaginationParams
+@using TravelNurseServer.Enums
+@using TravelNurseServer.Helpers
+@using TravelNurseServer.Services
+@rendermode InteractiveServer
+@inject IJobService JobService
+@inject IDisciplineService DisciplineService
+@inject ISnackbar Snackbar
+@inject IDataFetchService DataFetchService
+
+@if (_isLoadingAllDependencies)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else
+{
+    <MudDataGrid ServerData="LoadGridData"
+             T="GetJobDto" @ref="JobTableContextStore.DataGrid"
+             Class="w-full ml-8 mr-8"
+             Filterable="true"
+             FilterMode="@DataGridFilterMode.ColumnFilterRow"
+             Style="overflow-x: visible">
+    <Columns>
+        <PropertyColumn Property="@(item => item.Id)" Title="Id" Filterable="false">
+            <CellTemplate>
+                <MudText @onclick="@(() => RowCellClicked(context.Item.Id))">@context.Item.Id</MudText>
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(item => item.JobTitle)" Title="Job Title">
+            <FilterTemplate>
+                <TextInputTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.JobTitleFilterOpen"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="JobTitle"
+                    FilterString="@JobTitle"
+                    FilterStringChanged="@(v => JobTitle = v)"
+                    />
+            </FilterTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(item => item.Requirements)" Title="Requirements" Filterable="false">
+            <FilterTemplate>
+                <TextInputTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.JobRequirementFilterOpen"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="Requirements"
+                    FilterString="@Requirements"
+                    FilterStringChanged="@(v => Requirements = v)"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+        
+        <PropertyColumn Property="@(item => item.JobType)" Title="Job Type">
+            <FilterTemplate>
+                
+                <EnumTableFilter 
+                    T="GetJobDto" TEnum="JobType"
+                    Context="context"
+                    PropertyName="@JobsTableFilter.JobType"
+                    SelectedValue="@JobType"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOpenState="JobTableContextStore.JobTypeFilterOpen"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    ValueChanged="@(v => JobType = v)" />
+
+            </FilterTemplate>
+        </PropertyColumn>
+        
+        <PropertyColumn Property="@(item => item.HousingProvided)" Title="Housing Provided">
+            <FilterTemplate>
+                <BooleanTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.HousingProvidedFilterOpen"
+                    ValueChanged="@(v => HousingProvided = v)"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="@JobsTableFilter.HousingProvided"
+                    BooleanFilter="@HousingProvided"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+        
+        <PropertyColumn Property="@(item => item.HideExternally)" Title="Hide Externally">
+            <FilterTemplate>
+                <BooleanTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.HideExternallyFilterOpen"
+                    ValueChanged="@(v => HideExternally = v)"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="@JobsTableFilter.HideExternally"
+                    BooleanFilter="@HideExternally"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+        
+        <PropertyColumn Property="@(item => item.ContractLengthWeeks)" Title="Contract Length">
+            <CellTemplate>
+                <MudText>@context.Item.ContractLengthWeeks Week(s)</MudText>
+            </CellTemplate>
+
+            <FilterTemplate>
+                <TextInputTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.ContractLengthFilterOpen"
+                    FilterDefinitionState="_filterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="@JobsTableFilter.ContractLengthWeeks"
+                    FilterString="@ContractLengthWeeks"
+                    FilterStringChanged="@(v => ContractLengthWeeks = v)"
+                    IsNumberFilter="true"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="@(item => item.StartDate)" Title="Start Date">
+            <CellTemplate>
+                @context.Item.StartDate.ToString("MM/dd/yyyy")
+            </CellTemplate>
+
+            <FilterTemplate>
+                <DateTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.StartDateFilterOpen"
+                    FilterDefinitionState="JobTableContextStore.FilterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="@JobsTableFilter.StartDate"
+                    FilterDateBefore="StartDateBefore"
+                    FilterDateAfter="StartDateAfter"
+                    FilterDateBeforeChanged="@(v => StartDateBefore = v)"
+                    FilterDateAfterChanged="@(v => StartDateAfter = v)"
+                    QueryParameterPropertyNameBeforeDate="@JobsTableFilter.StartDateBefore"
+                    QueryParameterPropertyNameAfterDate="@JobsTableFilter.StartDateAfter"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="@(item => item.ExpiresOn)" Title="Expires On">
+            <CellTemplate>
+                @context.Item.ExpiresOn.ToString("MM/dd/yyyy")
+            </CellTemplate>
+
+            <FilterTemplate>
+                <DateTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.ExpireOnFilterOpen"
+                    FilterDefinitionState="JobTableContextStore.FilterDefinition"
+                    FilterOptions="JobTableContextStore.FilterOptions"
+                    UpdateFilterOptions="@(v => JobTableContextStore.FilterOptions = v)"
+                    PropertyName="@JobsTableFilter.ExpiresOn"
+                    FilterDateBefore="ExpiredOnDateBefore"
+                    FilterDateAfter="ExpiredOnDateAfter"
+                    FilterDateBeforeChanged="@(v => ExpiredOnDateBefore = v)"
+                    FilterDateAfterChanged="@(v => ExpiredOnDateAfter = v)"
+                    QueryParameterPropertyNameBeforeDate="@JobsTableFilter.ExpiredOnDateBefore"
+                    QueryParameterPropertyNameAfterDate="@JobsTableFilter.ExpiredOnDateAfter"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+        
+        
+        
+        <PropertyColumn Property="@(item => item.Discipline.Name)" Title="Discipline">
+            <FilterTemplate>
+                <MultiSelectTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.DisciplineFilterOpen"
+                    SelectedItems="JobTableContextStore.SelectedDisciplineFilterItems"
+                    Options="JobTableContextStore.Disciplines"
+                    FilterDefinitionState="_filterDefinition"
+                    UpdateSelectedItems="@(v => JobTableContextStore.SelectedDisciplineFilterItems = v)"
+                    UpdateOptions="@(v => JobTableContextStore.Disciplines = v)"
+                />
+            </FilterTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="@(item => item.PlatformId)" Title="PlatformId">
+            <FilterTemplate>
+                <MultiSelectTableFilter
+                    T="GetJobDto"
+                    Context="context"
+                    FilterOpenState="JobTableContextStore.PlatformFilterOpen"
+                    SelectedItems="JobTableContextStore.SelectedPlatformFilterItems"
+                    Options="JobTableContextStore.Platforms"
+                    FilterDefinitionState="_filterDefinition"
+                    UpdateSelectedItems="@(v => JobTableContextStore.SelectedPlatformFilterItems = v)"
+                    UpdateOptions="@(v => JobTableContextStore.Platforms = v)"
+                    />
+            </FilterTemplate>
+            <CellTemplate>
+                <MudText>
+                    @JobTableContextStore.Platforms.Find(x => x.Id == context.Item.PlatformId)?.Name
+                </MudText>
+
+            </CellTemplate>
+        </PropertyColumn>
+
+
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="GetJobDto"/>
+    </PagerContent>
+</MudDataGrid>
+}
+
+@code {
+    
+    [CascadingParameter] 
+    public JobTableStore JobTableContextStore { get; set; } = new();
+    
+    [SupplyParameterFromQuery] string? JobTitle { get; set; }
+    [SupplyParameterFromQuery] string? Requirements { get; set; }
+    [SupplyParameterFromQuery] int? JobType { get; set; }
+    [SupplyParameterFromQuery] string? ContractLengthWeeks { get; set; }
+    [SupplyParameterFromQuery] int? HousingProvided { get; set; }
+    
+    [SupplyParameterFromQuery] int? HideExternally { get; set; }
+    
+    [SupplyParameterFromQuery] DateTime? StartDateBefore { get; set; }
+    [SupplyParameterFromQuery] DateTime? StartDateAfter { get; set; }
+    [SupplyParameterFromQuery] DateTime? ExpiredOnDateBefore { get; set; }
+    [SupplyParameterFromQuery] DateTime? ExpiredOnDateAfter { get; set; }
+
+    List<SelectOption> _jobTypeEnumOptions = [];
+    
+    
+    readonly FilterDefinition<GetJobDto> _filterDefinition = new();
+    
+    private bool _isLoadingAllDependencies = true;
+    
+    
+    private void RowCellClicked(int id)
+    {
+        // Navigation.NavigateTo($"provider/{id}");
+    }
+
+    protected override void OnInitialized()
+    {
+        foreach (var param in JobTableContextStore.QueryParamFilterList)
+        {
+            var queryParamProperty = GetType().GetProperty(param.PropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (queryParamProperty != null)
+            {
+                var value = queryParamProperty.GetValue(this);
+
+                var propertyName = QueryParamHelper.FindPropertyName(
+                    JobTableContextStore.QueryParamFilters, param.PropertyName
+                );
+                
+                var enumType = QueryParamHelper.GetEnumType(propertyName);
+                
+                
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = propertyName,
+                    Operator = param.Operator,
+                    Value = (param.Type == QueryParamTypeEnum.Enum && enumType != null && value != null) 
+                        ? Enum.ToObject(enumType, value) 
+                        : QueryParamHelper.QueryParameterValueConverter(param, value)
+                };
+
+                if (value != null)
+                {
+                    JobTableContextStore.FilterOptions.Add(filterObj);
+                }
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var data = await DisciplineService.GetDisciplines();
+            var disciplineOptions = data.Select(x => new SelectOption { Id = x.Id, Name = x?.Name ?? "", Selected = false }).ToList();
+            disciplineOptions.Sort((a, b) => a.Id.CompareTo(b.Id));
+            JobTableContextStore.Disciplines = disciplineOptions;
+            JobTableContextStore.Platforms = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Platforms, null, null, true);
+
+            _jobTypeEnumOptions = SelectOptionHelper.ConvertEnumToSelectOptions<JobType>();
+
+            _isLoadingAllDependencies = false;
+            StateHasChanged();
+        }
+    }
+    
+    private async Task<GridData<GetJobDto>> LoadGridData(GridState<GetJobDto> state)
+    {
+            JobTableContextStore.RequestDto.Page = state.Page;
+            JobTableContextStore.RequestDto.PageSize = state.PageSize;
+            JobTableContextStore.RequestDto.Filter = state.FilterDefinitions;
+
+            // Custom table filter section
+            CustomFilterHelper.ProcessMultiSelectFilter(
+                JobTableContextStore.SelectedDisciplineFilterItems, "DisciplineId", JobTableContextStore.FilterOptions);
+            
+            CustomFilterHelper.ProcessMultiSelectFilter(
+                JobTableContextStore.SelectedPlatformFilterItems, "PlatformId", JobTableContextStore.FilterOptions);
+            
+            
+            // This for each loop is used to handle default table filters
+            foreach (var filterDefinition in state.FilterDefinitions)
+            {
+                if (filterDefinition != null)
+                {
+                    var filterObj = new DataGridFilterDto
+                    {
+                        PropertyName = filterDefinition?.Column?.PropertyName ?? "",
+                        Operator = filterDefinition?.Operator ?? "",
+                        Value = filterDefinition?.Value
+                    };
+                    JobTableContextStore.FilterOptions.Add(filterObj);
+                }
+            }
+
+            var apiResponse = await JobService.GetJobDataGrid(JobTableContextStore.RequestDto, JobTableContextStore.FilterOptions);
+            GridData<GetJobDto> data = new()
+            {
+                Items = apiResponse.Items,
+                TotalItems = apiResponse.ItemTotalCount
+            };
+            JobTableContextStore.FilterOptions = new List<DataGridFilterDto>();
+            StateHasChanged();
+            return data;  
+       
+    }
+}

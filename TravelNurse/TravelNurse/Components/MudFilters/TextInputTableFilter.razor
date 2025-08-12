@@ -1,0 +1,191 @@
+@using System.Text.RegularExpressions
+@using Core.Utils
+@using TravelNurse.Components.Common.Utils
+@using TravelNurseServer.Dtos.TablePaginationParams
+@typeparam T
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+@*
+    Important note!
+    
+    Due to the nature of how the Mud DataGrid behaves, please do not apply 
+    Clearable="true" to the <MudTextField /> component
+    
+    Please handle the text clear state separately, otherwise you will run into JavaScript interop calls issues
+    
+    Here's a brief description of the issue
+    - When Clearable is set to true in the MudTextField
+        The ApplyFilterAsync() will get run 
+        Then this line will run -> await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+        
+        What happens next is the table will call the ServerData function that's tied to the MudDataGrid
+        Forcing the table to reload the content. 
+        
+        Since the filter is nested within the MudDataGrid component
+        The MudPopover in this component will get disposed. 
+        
+        BUTT!!
+        Before this component gets fully disposed, some of the underline javascript is still running in parallel
+        
+        By the time the table gets the data back, it will re-render itself
+        Those javascript code that's running cocurrently will now return with a result and trying to find the appropriate HTML element to bond itself to
+        If those elements are not found, Blazor will error out
+         
+*@
+
+@if (_filterValue != null)
+{
+    <MudIconButton
+        Icon="@Icons.Material.TwoTone.FilterVintage"
+        Size="@Size.Small"
+        Disabled="true"
+    />
+}
+
+
+<MudIconButton OnClick="@OpenFilter" Icon="@Icons.Material.Outlined.FilterAlt" Size="@Size.Small"/>
+
+<MudIconButton OnClick="@ClearFilterAsync" Icon="@Icons.Material.TwoTone.FilterAltOff" Size="@Size.Small"/>
+
+<MudOverlay Visible="@FilterOpenState" OnClick="@(() => FilterOpenState = false)"/>
+<MudPopover Open="@FilterOpenState"
+            AnchorOrigin="Origin.BottomCenter"
+            TransformOrigin="Origin.TopCenter"
+            Style="width:300px">
+    <MudStack
+        Spacing="0"
+        Style="overflow-y:auto;max-height:250px; padding: 1rem;">
+        
+        <MudTextField
+            Label="Filter"
+            Immediate="true"
+            Variant="Variant.Text"
+            Adornment="Adornment.End"
+            AdornmentIcon="@Icons.Material.Filled.Clear"
+            OnAdornmentClick="@(() => ClearFilterAsync())"
+            Value="FilterString"
+            ValueChanged="@((string val) => OnInputChanged(val))"
+            />
+        
+    </MudStack>
+    <MudStack Row="true" Justify="Justify.FlexEnd">
+        @if (_canShowFilterButton)
+        {
+            <MudButton Color="@Color.Primary" OnClick="@(() => ApplyFilterAsync())">
+                Filter
+            </MudButton>
+        }
+        @if (!_canShowFilterButton)
+        {
+            <MudText Typo="Typo.subtitle2" Color="Color.Error">
+                Please enter a number value
+            </MudText>
+        }
+    </MudStack>
+</MudPopover>
+
+@code {
+    [Parameter] 
+    public FilterContext<T>  Context { get; set; } = default!;
+
+    [Parameter] 
+    public bool FilterOpenState { get; set; } = true;
+    
+    [Parameter]
+    public FilterDefinition<T>  FilterDefinitionState { get; set; } = new FilterDefinition<T>();
+
+    [Parameter] 
+    public string PropertyName { get; set; } = "";
+    
+    [Parameter]
+    public string? FilterString { get; set; } = "";
+    
+    [Parameter] 
+    public EventCallback<string?> FilterStringChanged { get; set; }
+
+    [Parameter] public List<DataGridFilterDto> FilterOptions { get; set; } = new();
+    
+    [Parameter] 
+    public EventCallback<List<DataGridFilterDto>> UpdateFilterOptions { get; set; }
+
+    [Parameter] 
+    public bool? IsNumberFilter { get; set; } = Constants.DefaultBoolean;
+    
+    void OpenFilter() => FilterOpenState = !FilterOpenState;
+    
+    
+    private string? _filterValue = "";
+    
+    private List<DataGridFilterDto> _filterOptions = new List<DataGridFilterDto>();
+
+    private bool _canShowFilterButton = true;
+    
+    
+    protected override void OnInitialized()
+    {
+        _filterValue = FilterString;
+        _filterOptions = FilterOptions;
+    }
+    
+    private void OnInputChanged(string value)
+    {
+        if (
+            IsNumberFilter == true && 
+            Regex.IsMatch(value, @"\D"))
+        {
+            _canShowFilterButton = false;
+        }
+        
+        else
+        {
+            _filterValue = value;
+            _canShowFilterButton = true;
+        }
+    }
+    
+    private async Task ApplyFilterAsync()
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(_filterValue))
+            {
+                _filterOptions.RemoveAll(x => x.PropertyName == PropertyName || x.PropertyName == "");
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = PropertyName,
+                    Operator = IsNumberFilter != null && IsNumberFilter == true ? "=" : "contains",
+                    Value = IsNumberFilter != null && IsNumberFilter == true
+                    ? Int32.Parse(_filterValue)
+                    : _filterValue
+                };
+                QueryParamHelper.AddQueryParameter(Navigation, PropertyName, _filterValue);
+                _filterOptions.Add(filterObj);
+                await UpdateFilterOptions.InvokeAsync(_filterOptions);
+                await FilterStringChanged.InvokeAsync(_filterValue);
+                await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+                
+                
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add(e.Message, Severity.Error);
+        }
+    }
+
+    private async Task ClearFilterAsync()
+    {
+        
+        _filterOptions.RemoveAll(x => x.PropertyName == PropertyName);
+        _filterValue = null;
+        await UpdateFilterOptions.InvokeAsync(_filterOptions);
+        await FilterStringChanged.InvokeAsync(null);
+        FilterOptions.RemoveAll(x => x.PropertyName == PropertyName);
+        await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+        StateHasChanged();
+        
+        
+        QueryParamHelper.RemoveQueryParameter(Navigation, PropertyName);
+    }
+}

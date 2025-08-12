@@ -1,7 +1,12 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TravelNurseServer.Data;
+using TravelNurseServer.Dtos.DataGridDtos;
 using TravelNurseServer.Dtos.Jobs.Get;
+using TravelNurseServer.Dtos.TablePaginationParams;
+using TravelNurseServer.Entities.Jobs;
+using TravelNurseServer.Helpers;
 
 namespace TravelNurseServer.Services;
 
@@ -10,7 +15,7 @@ public interface IJobService
 {
     // Task AddJob(AddJobDto addTravelerDto);
     //
-    // Task<DataGridListItemDto<GetJobDto>> GetJobDataGrid<T>(GridDataRequestDto<T> state, List<DataGridFilterDto> filters);
+    Task<DataGridListItemDto<GetJobDto>> GetJobDataGrid<T>(GridDataRequestDto<T> state, List<DataGridFilterDto> filters);
     
     Task<List<GetJobDto>> GetJobs();
 }
@@ -37,5 +42,46 @@ public class JobService : IJobService
         var data = await context.Jobs.ToListAsync();
         var res = _mapper.Map<List<GetJobDto>>(data);
         return res;
+    }
+    
+    public async Task<DataGridListItemDto<GetJobDto>> GetJobDataGrid<T>(GridDataRequestDto<T> state,
+        List<DataGridFilterDto> filters)
+    {
+        var jobFilterPredicates = new List<Expression<Func<Job, bool>>>();
+        foreach (var filter in filters)
+            if (filter?.Value != null && !string.IsNullOrEmpty(filter.PropertyName) && !string.IsNullOrEmpty(filter.Operator))
+            {
+                var predicate = ExpressionBuilder.BuildPredicate<Job>(
+                    filter.PropertyName,
+                    filter.Operator,
+                    filter.Value
+                );
+                jobFilterPredicates.Add(predicate);
+            }
+
+        var jobFilterList = ExpressionBuilder.AndAll(jobFilterPredicates.ToArray());
+
+        await using var context = await _context.CreateDbContextAsync();
+        
+        
+        var jobs = await context.Jobs
+            .Include(x => x.Discipline)
+            .Where(jobFilterList)
+            .OrderBy(x => x.Id)
+            .Skip(state.Page * state.PageSize)
+            .Take(state.PageSize)
+            .ToListAsync();
+
+        var jobsCount =
+            await context.Jobs
+                .Where(jobFilterList).CountAsync();
+
+        var items = _mapper.Map<List<GetJobDto>>(jobs);
+
+        return new DataGridListItemDto<GetJobDto>
+        {
+            Items = items,
+            ItemTotalCount = jobsCount
+        };
     }
 }

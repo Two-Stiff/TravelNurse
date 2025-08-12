@@ -1,0 +1,133 @@
+@using TravelNurse.Components.Common.Utils
+@using TravelNurseServer.Dtos.TablePaginationParams
+@typeparam T
+@typeparam TEnum where TEnum : struct, Enum
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+@if (_filterValue != null)
+{
+    <MudIconButton 
+        Icon="@Icons.Material.TwoTone.FilterVintage" 
+        Size="@Size.Small"
+        Disabled="true"
+        />
+}
+
+<MudIconButton OnClick="@OpenFilter" Icon="@Icons.Material.TwoTone.FilterAlt" Size="@Size.Small"/>
+<MudIconButton OnClick="@ClearFilterAsync" Icon="@Icons.Material.TwoTone.FilterAltOff" Size="@Size.Small"/>
+
+<MudOverlay Visible="@FilterOpenState" OnClick="@(() => FilterOpenState = false)" />
+<MudPopover Open="@FilterOpenState"
+            AnchorOrigin="Origin.BottomCenter"
+            TransformOrigin="Origin.TopCenter"
+            Style="width:300px">
+    <MudStack Spacing="0" Style="overflow-y:auto;max-height:250px; padding: 1rem;">
+        <MudSelect T="int?"
+                   Value="_filterValue"
+                   ValueChanged="@OnInputChanged"
+                   Label="Filter">
+            @foreach (var enumItem in Enum.GetValues(typeof(TEnum)).Cast<TEnum>())
+            {
+                <MudSelectItem T="int?" Value="@Convert.ToInt32(enumItem)">
+                    @enumItem.ToString()
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </MudStack>
+
+    <MudStack Row="true" Justify="Justify.FlexEnd" Class="px-4 pb-2">
+        <MudButton OnClick="@ClearFilterAsync">Clear</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@ApplyFilterAsync">
+            Filter
+        </MudButton>
+    </MudStack>
+</MudPopover>
+
+@code {
+    [Parameter] 
+    public FilterContext<T> Context { get; set; } = default!;
+    
+    [Parameter]
+    public bool FilterOpenState { get; set; } = true;
+    
+    [Parameter] 
+    public FilterDefinition<T> FilterDefinitionState { get; set; } = new();
+    
+    [Parameter] 
+    public EventCallback<int?> ValueChanged { get; set; }
+    
+    [Parameter] 
+    public string PropertyName { get; set; } = "";
+    
+    [Parameter] 
+    public int? SelectedValue { get; set; }
+    
+    [Parameter] 
+    public Type EnumType { get; set; } = typeof(TEnum);
+    
+    [Parameter] 
+    public List<DataGridFilterDto> FilterOptions { get; set; } = new();
+    
+    [Parameter] 
+    public EventCallback<List<DataGridFilterDto>> UpdateFilterOptions { get; set; }
+
+    private int? _filterValue;
+    private List<DataGridFilterDto> _filterOptions = new();
+
+    protected override void OnInitialized()
+    {
+        _filterValue = SelectedValue;
+        _filterOptions = FilterOptions;
+    }
+
+    private void OnInputChanged(int? value)
+    {
+        _filterValue = value;
+    }
+
+    private void OpenFilter()
+    {
+        FilterOpenState = !FilterOpenState;
+    }
+
+    private async Task ApplyFilterAsync()
+    {
+        try
+        {
+            if (_filterValue != null)
+            {
+                var enumValue = Enum.ToObject(EnumType, _filterValue);
+                _filterOptions.RemoveAll(x => x.PropertyName == PropertyName || x.PropertyName == "");
+            
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = PropertyName,
+                    Operator = "is",
+                    Value = enumValue
+                };
+                QueryParamHelper.AddQueryParameter(Navigation, PropertyName, _filterValue.ToString());
+                _filterOptions.Add(filterObj);
+
+                await UpdateFilterOptions.InvokeAsync(_filterOptions);
+                await ValueChanged.InvokeAsync(_filterValue);
+                await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add($"Failed to apply filter: {e.Message}", Severity.Error);
+        }
+    }
+
+    private async Task ClearFilterAsync()
+    {
+        _filterOptions.RemoveAll(x => x.PropertyName == PropertyName);
+        _filterValue = null;
+        await UpdateFilterOptions.InvokeAsync(_filterOptions);
+        await ValueChanged.InvokeAsync(null);
+        await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+        QueryParamHelper.RemoveQueryParameter(Navigation, PropertyName);
+    }
+}

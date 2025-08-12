@@ -1,9 +1,10 @@
+using Core.Dto;
 using TravelNurseServer.Dtos.Common.Get;
 using TravelNurseServer.Enums;
 
 namespace TravelNurseServer.Dtos.Jobs.Get;
 
-public class GetJobDto
+public class GetJobDto : BaseGetDto
 {
     public string? JobTitle { get; set; }
     

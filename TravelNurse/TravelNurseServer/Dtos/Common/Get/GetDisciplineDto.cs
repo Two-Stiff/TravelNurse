@@ -3,7 +3,7 @@ using Core.Dto;
 
 namespace TravelNurseServer.Dtos.Common.Get;
 
-public class GetDisciplineDto
+public class GetDisciplineDto: BaseGetDto
 {
     public string? Abbreviation { get; set; }
     

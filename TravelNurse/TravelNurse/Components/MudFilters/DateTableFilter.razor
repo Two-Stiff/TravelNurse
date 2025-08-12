@@ -1,0 +1,208 @@
+@using Core.Utils
+@using TravelNurse.Components.Common.Utils
+@using TravelNurseServer.Dtos.TablePaginationParams
+@typeparam T
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+@if (_filterDateBefore != null || _filterDateAfter != null)
+{
+    <MudIconButton
+        Icon="@Icons.Material.TwoTone.FilterVintage"
+        Size="@Size.Small"
+        Disabled="true"
+    />
+}
+
+
+<MudIconButton OnClick="@OpenFilter" Icon="@Icons.Material.Outlined.FilterAlt" Size="@Size.Small"/>
+
+<MudIconButton OnClick="@ClearFilterAsync" Icon="@Icons.Material.TwoTone.FilterAltOff" Size="@Size.Small"/>
+
+<MudOverlay Visible="@FilterOpenState" OnClick="@(() => FilterOpenState = false)"/>
+<MudPopover Open="@FilterOpenState"
+            AnchorOrigin="Origin.BottomCenter"
+            TransformOrigin="Origin.TopCenter"
+            Style="width:300px">
+    <MudStack
+        Spacing="0"
+        Style="overflow-y:auto;max-height:250px; padding: 1rem;">
+
+        <MudDatePicker
+            Label="Is Before"
+            Clearable="true"
+            Date="_filterDateBefore"
+            DateChanged="OnInputChangedDateBefore"
+              
+        />
+
+        <MudDatePicker
+            Label="Is After"
+            Clearable="true"
+            Date="_filterDateAfter"
+            DateChanged="OnInputChangedDateAfter"
+        />
+        
+    </MudStack>
+    <MudStack Row="true" Justify="Justify.FlexEnd">
+        <MudButton Color="@Color.Primary" OnClick="@(() => ApplyFilterAsync())">
+            Filter
+        </MudButton>
+    </MudStack>
+</MudPopover>
+
+@code {
+    [Parameter] 
+    public FilterContext<T>  Context { get; set; } = default!;
+
+    [Parameter] 
+    public bool FilterOpenState { get; set; } = true;
+    
+    [Parameter]
+    public FilterDefinition<T>  FilterDefinitionState { get; set; } = new FilterDefinition<T>();
+
+    [Parameter] 
+    public string PropertyName { get; set; } = "";
+    
+
+    [Parameter] public List<DataGridFilterDto> FilterOptions { get; set; } = new();
+    
+    [Parameter] 
+    public EventCallback<List<DataGridFilterDto>> UpdateFilterOptions { get; set; }
+    
+    // ---->
+
+    [Parameter] 
+    public DateTime? FilterDateBefore { get; set; }
+    
+    [Parameter]
+    public DateTime? FilterDateAfter { get; set; }
+    
+    [Parameter] 
+    public EventCallback<DateTime?> FilterDateBeforeChanged { get; set; }
+    
+    [Parameter] 
+    public EventCallback<DateTime?> FilterDateAfterChanged { get; set; }
+    
+    [Parameter] 
+    public string QueryParameterPropertyNameBeforeDate { get; set; } = Constants.DefaultString;
+    
+    [Parameter] 
+    public string QueryParameterPropertyNameAfterDate { get; set; } = Constants.DefaultString;
+
+    void OpenFilter() => FilterOpenState = !FilterOpenState;
+    
+    private DateTime? _filterDateBefore = null;
+    
+    private DateTime? _filterDateAfter = null;
+    
+    private List<DataGridFilterDto> _filterOptions = new List<DataGridFilterDto>();
+    
+    
+    protected override void OnInitialized()
+    {
+        _filterOptions = FilterOptions;
+        _filterDateBefore = FilterDateBefore;
+        _filterDateAfter = FilterDateAfter;
+    }
+    
+    private void OnInputChangedDateBefore(DateTime? value)
+    {
+        _filterDateBefore = value;
+    }
+    
+    private void OnInputChangedDateAfter(DateTime? value)
+    {
+        _filterDateAfter = value;
+    }
+    
+    private async Task ApplyFilterAsync()
+    {
+        try
+        {
+            string? uri = null;
+            if (_filterDateBefore != null)
+            {
+                _filterOptions.RemoveAll(x => x.Operator == "is on or before"
+                                              || x.PropertyName == "");
+
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = PropertyName,
+                    Operator = "is on or before",
+                    Value = _filterDateBefore
+                };
+                _filterOptions.Add(filterObj);
+                uri = QueryParamHelper.AddQueryParameter(Navigation, QueryParameterPropertyNameBeforeDate, _filterDateBefore.Value.ToString("MM-dd-yyyy"));
+
+            }
+
+            if (_filterDateBefore == null)
+            {
+                uri = QueryParamHelper.RemoveQueryParameter(
+                     Navigation, QueryParameterPropertyNameBeforeDate
+                );
+            }
+            
+            
+            // ---->
+            if (_filterDateAfter != null)
+            {
+                _filterOptions.RemoveAll(x => x.Operator == "is on or after"
+                                              || x.PropertyName == "");
+                var filterObj = new DataGridFilterDto
+                {
+                    PropertyName = PropertyName,
+                    Operator = "is on or after",
+                    Value = _filterDateAfter
+                };
+                _filterOptions.Add(filterObj);
+                uri = QueryParamHelper.AddQueryParameter(Navigation, QueryParameterPropertyNameAfterDate, _filterDateAfter.Value.ToString("MM-dd-yyyy"));
+
+            }
+            
+            if (_filterDateAfter == null)
+            {
+                QueryParamHelper.RemoveQueryParameter(
+                    Navigation, QueryParameterPropertyNameAfterDate, uri
+                );
+            }
+            
+            
+            await UpdateFilterOptions.InvokeAsync(_filterOptions);
+            await FilterDateBeforeChanged.InvokeAsync(_filterDateBefore);
+            await FilterDateAfterChanged.InvokeAsync(_filterDateAfter);
+            await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add(e.Message, Severity.Error);
+        }
+    }
+
+    private async Task ClearFilterAsync()
+    {
+        _filterOptions.RemoveAll(x => x.PropertyName == PropertyName);
+        _filterDateBefore = null;
+        _filterDateAfter = null;
+        
+        await UpdateFilterOptions.InvokeAsync(_filterOptions);
+        
+        await FilterDateBeforeChanged.InvokeAsync(_filterDateBefore);
+        await FilterDateAfterChanged.InvokeAsync(_filterDateAfter);
+        
+        await Context.Actions.ApplyFilterAsync(FilterDefinitionState);
+        StateHasChanged();
+        
+        string? uri;
+        
+        uri = QueryParamHelper.RemoveQueryParameter(
+            Navigation, QueryParameterPropertyNameBeforeDate
+        );
+        
+        QueryParamHelper.RemoveQueryParameter(
+            Navigation, QueryParameterPropertyNameAfterDate, uri
+        );
+    }
+}

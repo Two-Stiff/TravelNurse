@@ -1,0 +1,16 @@
+@page "/allProviders"
+
+@using TravelNurse.Components.Src.Tables
+@inject AllProviderTableStore AllProviderTableContextStore
+@rendermode InteractiveServer
+
+
+<MudText Typo="Typo.h6"> Locum Providers </MudText>
+    
+<CascadingValue Value="AllProviderTableContextStore">
+    <AllProvidersTable />
+</CascadingValue>
+
+@code {
+    
+}

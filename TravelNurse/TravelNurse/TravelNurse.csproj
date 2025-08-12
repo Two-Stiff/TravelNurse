@@ -7,12 +7,23 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
       <PackageReference Include="FluentValidation" Version="12.0.0" />
       <PackageReference Include="MudBlazor" Version="8.7.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\TravelNurseServer\TravelNurseServer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Components\Src\Tables\AllProviderTableStore.cs">
+        <DependentUpon>AllProvidersTable.razor</DependentUpon>
+      </Compile>
+      <Compile Update="Components\Src\Tables\JobTableStore.cs">
+        <DependentUpon>JobsTable.razor</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

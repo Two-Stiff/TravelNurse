@@ -1,6 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using TravelNurse.Components;
+using TravelNurse.Components.Common.Services;
+using TravelNurse.Components.Common.Utils;
+using TravelNurse.Components.Src.ContextStore;
 using TravelNurseServer.Common;
+using TravelNurseServer.Data;
 using TravelNurseServer.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,13 +17,24 @@ builder.Services.AddRazorComponents()
 // Adding MudBlazor to the project
 builder.Services.AddMudServices();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContextFactory<DataContext>(options =>
+    options.UseNpgsql(connectionString)
+        .EnableSensitiveDataLogging()
+        .LogTo(Console.WriteLine, LogLevel.Information));
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 //
 //
-// builder.Services.AddAutoMapper(typeof(ServerAutoMapperProfile));
-// builder.Services.ConfigureServices();
+builder.Services.AddAutoMapper(typeof(ServerAutoMapperProfile));
+builder.Services.ConfigureServices();
+
+// Context store
+builder.Services.ConfigureContextStoreServices();
+builder.Services.ConfigureTravelNurseServices();
+
 
 var app = builder.Build();
 
