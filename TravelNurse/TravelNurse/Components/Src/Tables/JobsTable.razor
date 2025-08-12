@@ -13,6 +13,7 @@
 @inject IDisciplineService DisciplineService
 @inject ISnackbar Snackbar
 @inject IDataFetchService DataFetchService
+@inject NavigationManager Navigation
 
 @if (_isLoadingAllDependencies)
 {
@@ -322,7 +323,6 @@ else
             CustomFilterHelper.ProcessMultiSelectFilter(
                 JobTableContextStore.SelectedPlatformFilterItems, "PlatformId", JobTableContextStore.FilterOptions);
             
-            
             // This for each loop is used to handle default table filters
             foreach (var filterDefinition in state.FilterDefinitions)
             {
@@ -344,7 +344,6 @@ else
                 Items = apiResponse.Items,
                 TotalItems = apiResponse.ItemTotalCount
             };
-            JobTableContextStore.FilterOptions = new List<DataGridFilterDto>();
             StateHasChanged();
             return data;  
        
