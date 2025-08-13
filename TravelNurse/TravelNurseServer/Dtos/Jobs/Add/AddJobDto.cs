@@ -14,8 +14,6 @@ public class AddJobDto
 
     [StringLength(20)] public string PlatformJobId { get; set; } = Constants.DefaultString;
 
-    [Required] public bool IsFellowshipRequired { get; set; } = Constants.DefaultBoolean;
-
     [Required][NotNull] public bool? HideCity { get; set; } = Constants.DefaultBoolean;
 
     [Required][NotNull] public bool? AllowsAutoposterUpdate { get; set; } = Constants.DefaultBoolean;
@@ -73,11 +71,6 @@ public class AddJobDto
     [Required]
     [NotEqual(-1, "Please select a value")]
     public int JobType { get; set; } = -1;
-
-    [Required]
-    public int? ContactId { get; set; }
-
-    [Required]
-    public string ContactName { get; set; } = Constants.DefaultString;
+    
     
 }

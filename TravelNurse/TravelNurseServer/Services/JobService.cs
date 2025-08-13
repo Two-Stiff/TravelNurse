@@ -91,6 +91,10 @@ public class JobService : IJobService
         await using var context = await _context.CreateDbContextAsync();
 
         var job = _mapper.Map<Job>(addJobDto);
+
+        job.StartDate = job.StartDate.ToUtcSafe();
+        job.ExpiresOn = job.ExpiresOn.ToUtcSafe();
+        
         await context.Jobs.AddAsync(job);
         await context.SaveChangesAsync();
         

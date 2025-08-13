@@ -28,7 +28,4 @@ public enum DataFetchEnum
     [Description("JobBoardLicenseTypes")]
     JobBoardLicenseTypes = 7,
     
-
-    [Description("RateTypes")]
-    RateTypes = 9,
 }

@@ -31,6 +31,7 @@
 
     <ItemGroup>
       <Folder Include="Data\Scripts\" />
+      <Folder Include="Entities\Contacts\" />
     </ItemGroup>
 
 </Project>

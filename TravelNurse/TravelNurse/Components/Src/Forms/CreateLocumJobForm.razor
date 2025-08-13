@@ -18,7 +18,9 @@
 <MudCard>
     <MudForm
     Model="@_addLocumJobDtoFormModel"
-    @ref="@_form">
+    @ref="@_form"
+    ValidationDelay="0"
+    >
         <MudCardContent>
             <MudGrid>
 
@@ -165,37 +167,9 @@
                 Label="JobTypes"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
-
-                <MudItemAutoCompleteField
-                T="string"
-                Options="_contacts"
-                Value="@_addLocumJobDtoFormModel.ContactName"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.ContactName = v)"
-                For="@(() => _addLocumJobDtoFormModel.ContactName)"
-                OptionalFormValue="@_addLocumJobDtoFormModel.ContactId"
-                Label="Contacts"
-                SearchMethod="AutoCompleteSearch"
-                OnValueSelected="OnAutoCompleteSelectValue"
-                FetchType="DataFetchEnum.Contacts"
-                IsFormDependencyLoading="_isLoadingAllDependencies"
-                Xs="12" Md="12"
-                />
                 
                 @* Check box section *@
                 <MudGrid Style="margin-top: 2rem;">
-
-                    <MudItemCheckBoxField
-                    T="bool"
-                    Value="@_addLocumJobDtoFormModel.IsFellowshipRequired"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.IsFellowshipRequired = v)"
-                    For="@(() => _addLocumJobDtoFormModel.IsFellowshipRequired)"
-                    MudBlazorColor="Color.Secondary"
-                    Placement="Placement.Bottom"
-                    Label="Fellowship Required?"
-                    Xs="5"
-                    Md="3"
-                    IsFormDependencyLoading="_isLoadingAllDependencies"
-                    Size="Size.Small"/>
 
                     <MudItemCheckBoxField
                     T="bool?"
@@ -303,15 +277,11 @@
 
     // States
     private List<SelectOption> _platforms = new();
-    private List<SelectOption> _contacts = new();
     private List<SelectOption> _disciplines = new();
     private List<SelectOption> _jobType = new();
-    private List<SelectOption> _shiftPerWeeks = new();
-    private List<SelectOption> _rateTypes = new();
-    private List<SelectOption> _facilityList = new();
-    private List<SelectOption> _jobBoardCertificationTypes = new();
-    private List<SelectOption> _jobBoardLicenseTypes = new();
 
+    private List<SelectOption> _facilityList = new();
+    
     // This will dictate whether the form components should show skeleton loaders
     private bool _isLoadingAllDependencies = true;
 
@@ -320,9 +290,6 @@
 
     protected override void OnInitialized()
     {
-        _shiftPerWeeks = DummyDataContext.GetShiftPerWeek();
-
-        // Enum selectables 
         _jobType = SelectOptionHelper.ConvertEnumToSelectOptions<JobType>();
     }
 
@@ -331,16 +298,8 @@
         if (firstRender)
         {
             _disciplines = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Disciplines, null, null, true);
-
             _facilityList = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Facilities, null, null, false);
             _platforms = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Platforms, null, null, true);
-            _contacts = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Contacts, null, null, true);
-
-            _jobBoardCertificationTypes = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.JobBoardCertificationTypes, null, null, true);
-            _jobBoardLicenseTypes = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.JobBoardLicenseTypes, null, null, true);
-            
-            var rateTypes = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.RateTypes, null, null, null);
-            _rateTypes = SelectOptionHelper.AddNullDefaultOption(rateTypes);
 
             _isLoadingAllDependencies = false;
             StateHasChanged();
@@ -394,9 +353,6 @@
         {
             case DataFetchEnum.Facilities:
                 _addLocumJobDtoFormModel.FacilityId = sanitizedValue;
-                break;
-            case DataFetchEnum.Contacts:
-                _addLocumJobDtoFormModel.ContactId = sanitizedValue;
                 break;
         }
     }
