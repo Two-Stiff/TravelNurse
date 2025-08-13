@@ -1,6 +1,4 @@
 @using AutoMapper
-@using Microsoft.AspNetCore.Authentication
-@using TravelNurse.Components.Common.DummyData
 @using TravelNurse.Components.Common.Enums
 @using TravelNurse.Components.Common.Services
 @using TravelNurse.Components.Common.Utils
@@ -8,17 +6,16 @@
 @using TravelNurseServer.Helpers
 @using TravelNurseServer.Services
 @using TravelNurse.Components.MudFormComponents
-@using TravelNurse.Components.Common
 @using TravelNurseServer.Dtos.Jobs.Add
-@using TravelNurseServer.Dtos.Jobs.Update
 @inject ISnackbar SnackBar
-@inject IDisciplineService RateTypeService
 @inject IFacilityService FacilityService
 @inject IJobService JobService
 @inject IDataFetchService DataFetchService
 @inject IMapper Mapper
 
-<MudCard>
+<MudCard
+    Style="padding: 1rem;"
+    >
     <MudForm
     Model="@_addLocumJobDtoFormModel"
     @ref="@_form"
@@ -151,19 +148,6 @@
 
                     <MudItemCheckBoxField
                     T="bool?"
-                    Value="@_addLocumJobDtoFormModel.HideCity"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.HideCity = v)"
-                    For="@(() => _addLocumJobDtoFormModel.HideCity)"
-                    MudBlazorColor="Color.Secondary"
-                    Placement="Placement.Bottom"
-                    Label="Hide City"
-                    Xs="5"
-                    Md="3"
-                    IsFormDependencyLoading="_isLoadingAllDependencies"
-                    Size="Size.Small"/>
-
-                    <MudItemCheckBoxField
-                    T="bool?"
                     Value="@_addLocumJobDtoFormModel.AllowsAutoposterUpdate"
                     ValueChanged="@(v => _addLocumJobDtoFormModel.AllowsAutoposterUpdate = v)"
                     For="@(() => _addLocumJobDtoFormModel.AllowsAutoposterUpdate)"
@@ -218,17 +202,20 @@
             </MudGrid>
 
             <MudStack
-                Style=" justify-content: center; align-items: center;">
+                Row
+                Justify="Justify.Center"
+                AlignItems="AlignItems.Center"
+                Style="margin-top: 1rem; padding: 1rem;">
                 @if (Id != null && _existingJob)
                 {
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" 
                                OnClick="@(async () => await UpdateJob())">
                         Update Job
                     </MudButton>
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                OnClick="@(async () => await AddJob())">
                         Add Job
                     </MudButton>

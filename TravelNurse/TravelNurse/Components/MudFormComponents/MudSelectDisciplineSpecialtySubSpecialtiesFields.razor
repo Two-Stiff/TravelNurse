@@ -134,15 +134,19 @@ else
 
     private async Task OnDisciplineValueChanged(int disciplineId, bool? initialRender = false)
     {
-        _specialties = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Specialties, disciplineId, null, true);
+        _specialties = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Specialties, disciplineId, null, false);
         await DisciplineValueChanged.InvokeAsync(disciplineId);
         if (initialRender == false)
         {
             await SpecialtyValueChanged.InvokeAsync(-1);   
+            _shouldDisableSubSpecialty = true;
+        }
+        else
+        {
+            _shouldDisableSubSpecialty = false;
         }
         await DisplaySubSpecialtyChanged.InvokeAsync("");
         await UpdateSelectedSubSpecialties.InvokeAsync(new List<SelectOption>());
-        _shouldDisableSubSpecialty = true;
         StateHasChanged();
     }
     

@@ -72,7 +72,7 @@
                     <MudIconButton Icon="@Icons.Material.TwoTone.Menu" Color="Color.Inherit" Edge="Edge.Start"
                                    OnClick="@_ToggleNavigationDrawer"/>
 
-                    <Logo />
+                    @* <Logo /> *@
                 </MudDrawerHeader>
                 <MudNavMenu>
                     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.Home">
@@ -80,7 +80,7 @@
                     </MudNavLink>
 
                     <MudNavGroup Title="Jobs" Expanded="false" Icon="@Icons.Material.TwoTone.Folder">
-                        <MudNavLink Href="/createLocumJob" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.FileOpen">
+                        <MudNavLink Href="/createJob" Match="NavLinkMatch.All" Icon="@Icons.Material.TwoTone.FileOpen">
                             Create Job
                         </MudNavLink>
 

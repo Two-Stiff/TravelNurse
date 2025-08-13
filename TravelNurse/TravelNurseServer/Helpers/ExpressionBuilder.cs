@@ -98,7 +98,12 @@ public static class ExpressionBuilder
             }
             else if (baseType.IsEnum)
             {
-                body = Expression.Equal(property, Expression.Constant(typedValue, baseType));
+                object? convertedValue = null;
+                if (typedValue != null)
+                    convertedValue = Enum.ToObject(baseType, typedValue);
+
+                var constantExpr = Expression.Constant(convertedValue, propertyType);
+                body = Expression.Equal(property, constantExpr);
             }
             else if (IsNumericType(baseType))
             {

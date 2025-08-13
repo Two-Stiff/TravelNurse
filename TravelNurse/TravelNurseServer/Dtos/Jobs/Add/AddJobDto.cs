@@ -12,8 +12,6 @@ public class AddJobDto
 
     [StringLength(8000)] public string UniqueNotes { get; set; } = Constants.DefaultString;
     
-    [Required][NotNull] public bool? HideCity { get; set; } = Constants.DefaultBoolean;
-
     [Required][NotNull] public bool? AllowsAutoposterUpdate { get; set; } = Constants.DefaultBoolean;
 
     [Required][NotNull] public bool? Active { get; set; } = Constants.DefaultBoolean;

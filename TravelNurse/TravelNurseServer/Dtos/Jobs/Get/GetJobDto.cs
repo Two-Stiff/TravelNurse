@@ -8,6 +8,8 @@ public class GetJobDto : BaseGetDto
 {
     public string? JobTitle { get; set; }
     
+    public string? UniqueNotes { get; set; }
+    
     public string? Requirements { get; set; }
     
     public JobType? JobType { get; set; }
@@ -15,6 +17,12 @@ public class GetJobDto : BaseGetDto
     public bool HousingProvided { get; set; }
     
     public bool HideExternally { get; set; }
+    
+    public bool AutoPosted { get; set; }
+    
+    public bool Active { get; set; }
+    
+    public bool AllowsAutoposterUpdate { get; set; }
     
     public int ContractLengthWeeks { get; set; }
     

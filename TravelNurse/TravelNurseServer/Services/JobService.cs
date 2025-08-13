@@ -6,7 +6,6 @@ using TravelNurseServer.Data;
 using TravelNurseServer.Dtos.DataGridDtos;
 using TravelNurseServer.Dtos.Jobs.Add;
 using TravelNurseServer.Dtos.Jobs.Get;
-using TravelNurseServer.Dtos.Jobs.Update;
 using TravelNurseServer.Dtos.TablePaginationParams;
 using TravelNurseServer.Entities.Jobs;
 using TravelNurseServer.Enums;
@@ -139,9 +138,6 @@ public class JobService : IJobService
             .Include(x => x.JobSubSpecialties)
             .GetAsync(id);
         
-        addJobDto.StartDate = job.StartDate.ToUtcSafe();
-        addJobDto.ExpiresOn = job.ExpiresOn.ToUtcSafe();
-        
         job.JobTitle = addJobDto.JobTitle;
         job.StartDate = addJobDto.StartDate.Value.ToUtcSafe();
         job.ExpiresOn = addJobDto.ExpiresOn.Value.ToUtcSafe();
@@ -150,7 +146,6 @@ public class JobService : IJobService
         job.DisciplineId = addJobDto.DisciplineId;
         job.SpecialtyId = addJobDto.SpecialtyId;
         job.JobType = (JobType)addJobDto.JobType;
-        job.HideCity = addJobDto.HideCity.Value;
         job.AllowsAutoposterUpdate = addJobDto.AllowsAutoposterUpdate.Value;
         job.HousingProvided = addJobDto.HousingProvided.Value;
         job.AutoPosted = addJobDto.AutoPosted.Value;

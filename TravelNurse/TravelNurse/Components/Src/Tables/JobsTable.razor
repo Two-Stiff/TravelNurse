@@ -29,8 +29,10 @@ else
              Style="overflow-x: visible">
     <Columns>
         <PropertyColumn Property="@(item => item.Id)" Title="Id" Filterable="false">
-            <CellTemplate>
-                <MudText @onclick="@(() => RowCellClicked(context.Item.Id))">@context.Item.Id</MudText>
+            <CellTemplate >
+                <MudText
+                    Color="Color.Primary" Class="cursor-pointer"
+                    @onclick="@(() => RowCellClicked(context.Item.Id))">@context.Item.Id</MudText>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="@(item => item.JobTitle)" Title="Job Title">
@@ -261,7 +263,7 @@ else
     
     private void RowCellClicked(int id)
     {
-        // Navigation.NavigateTo($"provider/{id}");
+        Navigation.NavigateTo($"createJob?Id={id}");
     }
 
     protected override void OnInitialized()
