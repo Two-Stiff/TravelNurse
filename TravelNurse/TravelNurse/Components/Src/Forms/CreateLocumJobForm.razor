@@ -17,7 +17,7 @@
     Style="padding: 1rem;"
     >
     <MudForm
-    Model="@_addLocumJobDtoFormModel"
+    Model="@_addJobDtoFormModel"
     @ref="@_form"
     ValidationDelay="0"
     >
@@ -28,43 +28,43 @@
                     <MudText Typo="Typo.h5">Job information</MudText>
                 </MudItem>
                 <MudItemTextField T="string"
-                Value="@_addLocumJobDtoFormModel.JobTitle"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.JobTitle = v)"
-                For="@(() => _addLocumJobDtoFormModel.JobTitle)"
+                Value="@_addJobDtoFormModel.JobTitle"
+                ValueChanged="@(v => _addJobDtoFormModel.JobTitle = v)"
+                For="@(() => _addJobDtoFormModel.JobTitle)"
                 Label="Job Title"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
 
                 <MudItemTextField T="string"
-                Value="@_addLocumJobDtoFormModel.UniqueNotes"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.UniqueNotes = v)"
-                For="@(() => _addLocumJobDtoFormModel.UniqueNotes)"
+                Value="@_addJobDtoFormModel.UniqueNotes"
+                ValueChanged="@(v => _addJobDtoFormModel.UniqueNotes = v)"
+                For="@(() => _addJobDtoFormModel.UniqueNotes)"
                 Label="Unique Note"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
 
                 <MudItemTextField T="int?"
-                Value="@_addLocumJobDtoFormModel.ContractLengthWeeks"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.ContractLengthWeeks = v)"
-                For="@(() => _addLocumJobDtoFormModel.ContractLengthWeeks)"
+                Value="@_addJobDtoFormModel.ContractLengthWeeks"
+                ValueChanged="@(v => _addJobDtoFormModel.ContractLengthWeeks = v)"
+                For="@(() => _addJobDtoFormModel.ContractLengthWeeks)"
                 Label="Contract Length Weeks"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
 
                 <MudItemDatePickerField
                 T="DateTime?"
-                Value="@_addLocumJobDtoFormModel.StartDate"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.StartDate = v)"
-                For="@(() => _addLocumJobDtoFormModel.StartDate)"
+                Value="@_addJobDtoFormModel.StartDate"
+                ValueChanged="@(v => _addJobDtoFormModel.StartDate = v)"
+                For="@(() => _addJobDtoFormModel.StartDate)"
                 Label="Start Date"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
 
                 <MudItemDatePickerField
                 T="DateTime?"
-                Value="@_addLocumJobDtoFormModel.ExpiresOn"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.ExpiresOn = v)"
-                For="@(() => _addLocumJobDtoFormModel.ExpiresOn)"
+                Value="@_addJobDtoFormModel.ExpiresOn"
+                ValueChanged="@(v => _addJobDtoFormModel.ExpiresOn = v)"
+                For="@(() => _addJobDtoFormModel.ExpiresOn)"
                 Label="Expires On Date"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
@@ -73,9 +73,9 @@
                 
                 <MudItemSelectField
                 T="int"
-                Value="@_addLocumJobDtoFormModel.PlatformId"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.PlatformId = v)"
-                For="@(() => _addLocumJobDtoFormModel.PlatformId)"
+                Value="@_addJobDtoFormModel.PlatformId"
+                ValueChanged="@(v => _addJobDtoFormModel.PlatformId = v)"
+                For="@(() => _addJobDtoFormModel.PlatformId)"
                 Options="_platforms"
                 Label="Platform"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
@@ -84,10 +84,10 @@
                 <MudItemAutoCompleteField
                 T="string"
                 Options="_facilityList"
-                Value="@_addLocumJobDtoFormModel.FacilityName"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.FacilityName = v)"
-                For="@(() => _addLocumJobDtoFormModel.FacilityName)"
-                FormValue="@_addLocumJobDtoFormModel.FacilityId"
+                Value="@_addJobDtoFormModel.FacilityName"
+                ValueChanged="@(v => _addJobDtoFormModel.FacilityName = v)"
+                For="@(() => _addJobDtoFormModel.FacilityName)"
+                FormValue="@_addJobDtoFormModel.FacilityId"
                 Label="Facility"
                 SearchMethod="AutoCompleteSearch"
                 OnValueSelected="OnAutoCompleteSelectValue"
@@ -98,26 +98,26 @@
 
                 <MudSelectDisciplineSpecialtySubSpecialtiesFields
                 T="int"
-                DisciplineValue="@_addLocumJobDtoFormModel.DisciplineId"
-                DisciplineValueChanged="@(v => _addLocumJobDtoFormModel.DisciplineId = v)"
-                DisciplineFor="@(() => _addLocumJobDtoFormModel.DisciplineId)"
+                DisciplineValue="@_addJobDtoFormModel.DisciplineId"
+                DisciplineValueChanged="@(v => _addJobDtoFormModel.DisciplineId = v)"
+                DisciplineFor="@(() => _addJobDtoFormModel.DisciplineId)"
                 DisciplineOptions="_disciplines"
 
-                SpecialtyValue="@_addLocumJobDtoFormModel.SpecialtyId"
-                SpecialtyValueChanged="@(v => _addLocumJobDtoFormModel.SpecialtyId = v)"
-                SpecialtyFor="@(() => _addLocumJobDtoFormModel.SpecialtyId)"
+                SpecialtyValue="@_addJobDtoFormModel.SpecialtyId"
+                SpecialtyValueChanged="@(v => _addJobDtoFormModel.SpecialtyId = v)"
+                SpecialtyFor="@(() => _addJobDtoFormModel.SpecialtyId)"
 
-                DisplaySubSpecialty="@_addLocumJobDtoFormModel.SubSpecialtyNames"
-                DisplaySubSpecialtyChanged="@(v => _addLocumJobDtoFormModel.SubSpecialtyNames = v)"
-                DisplaySubSpecialtyFor="@(() => _addLocumJobDtoFormModel.SubSpecialtyNames)"
+                DisplaySubSpecialty="@_addJobDtoFormModel.SubSpecialtyNames"
+                DisplaySubSpecialtyChanged="@(v => _addJobDtoFormModel.SubSpecialtyNames = v)"
+                DisplaySubSpecialtyFor="@(() => _addJobDtoFormModel.SubSpecialtyNames)"
 
-                UpdateSelectedSubSpecialties="@(v => _addLocumJobDtoFormModel.SelectedSubSpecialties = v)"
+                UpdateSelectedSubSpecialties="@(v => _addJobDtoFormModel.SelectedSubSpecialties = v)"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
 
 
                 <MudItem xs="12" md="12">
-                    @if (_addLocumJobDtoFormModel.SelectedSubSpecialties.Count > 1)
+                    @if (_addJobDtoFormModel.SelectedSubSpecialties.Count > 1)
                     {
                         <MudText Typo="Typo.body1">Please select the required Sub-Specialties: </MudText>
                     }
@@ -125,7 +125,7 @@
 
                 <MudItem xs="12" md="12">
                     <div Style="display: flex; justify-content: flex-start;">
-                        @foreach (var sub in _addLocumJobDtoFormModel.SelectedSubSpecialties)
+                        @foreach (var sub in _addJobDtoFormModel.SelectedSubSpecialties)
                         {
                             <MudSwitch @bind-Value="sub.Selected"
                             Label="@sub.Name"/>
@@ -135,9 +135,9 @@
 
                 <MudItemSelectField
                 T="int"
-                Value="@_addLocumJobDtoFormModel.JobType"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.JobType = v)"
-                For="@(() => _addLocumJobDtoFormModel.JobType)"
+                Value="@_addJobDtoFormModel.JobType"
+                ValueChanged="@(v => _addJobDtoFormModel.JobType = v)"
+                For="@(() => _addJobDtoFormModel.JobType)"
                 Options="_jobType"
                 Label="JobTypes"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
@@ -148,9 +148,9 @@
 
                     <MudItemCheckBoxField
                     T="bool?"
-                    Value="@_addLocumJobDtoFormModel.AllowsAutoposterUpdate"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.AllowsAutoposterUpdate = v)"
-                    For="@(() => _addLocumJobDtoFormModel.AllowsAutoposterUpdate)"
+                    Value="@_addJobDtoFormModel.AllowsAutoposterUpdate"
+                    ValueChanged="@(v => _addJobDtoFormModel.AllowsAutoposterUpdate = v)"
+                    For="@(() => _addJobDtoFormModel.AllowsAutoposterUpdate)"
                     MudBlazorColor="Color.Secondary"
                     Placement="Placement.Bottom"
                     Label="Allow AutoPoster Update"
@@ -161,9 +161,9 @@
 
                     <MudItemCheckBoxField
                     T="bool?"
-                    Value="@_addLocumJobDtoFormModel.HousingProvided"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.HousingProvided = v)"
-                    For="@(() => _addLocumJobDtoFormModel.HousingProvided)"
+                    Value="@_addJobDtoFormModel.HousingProvided"
+                    ValueChanged="@(v => _addJobDtoFormModel.HousingProvided = v)"
+                    For="@(() => _addJobDtoFormModel.HousingProvided)"
                     MudBlazorColor="Color.Secondary"
                     Placement="Placement.Bottom"
                     Label="Housing Provided"
@@ -174,9 +174,9 @@
 
                     <MudItemCheckBoxField
                     T="bool?"
-                    Value="@_addLocumJobDtoFormModel.AutoPosted"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.AutoPosted = v)"
-                    For="@(() => _addLocumJobDtoFormModel.AutoPosted)"
+                    Value="@_addJobDtoFormModel.AutoPosted"
+                    ValueChanged="@(v => _addJobDtoFormModel.AutoPosted = v)"
+                    For="@(() => _addJobDtoFormModel.AutoPosted)"
                     MudBlazorColor="Color.Secondary"
                     Placement="Placement.Bottom"
                     Label="Auto Posted"
@@ -187,9 +187,9 @@
 
                     <MudItemCheckBoxField
                     T="bool?"
-                    Value="@_addLocumJobDtoFormModel.HideExternally"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.HideExternally = v)"
-                    For="@(() => _addLocumJobDtoFormModel.HideExternally)"
+                    Value="@_addJobDtoFormModel.HideExternally"
+                    ValueChanged="@(v => _addJobDtoFormModel.HideExternally = v)"
+                    For="@(() => _addJobDtoFormModel.HideExternally)"
                     MudBlazorColor="Color.Secondary"
                     Placement="Placement.Bottom"
                     Label="Hide Externally"
@@ -235,7 +235,7 @@
     MudForm _form = new MudForm();
 
     // Initial form values can be set here
-    AddJobDto _addLocumJobDtoFormModel = new();
+    AddJobDto _addJobDtoFormModel = new();
     
 
 
@@ -261,12 +261,12 @@
             {
                 var job = await JobService.GetJob(int.Parse(Id));
 
-                _addLocumJobDtoFormModel = Mapper.Map<AddJobDto>(job);
+                _addJobDtoFormModel = Mapper.Map<AddJobDto>(job);
 
                 if (job.FacilityId.HasValue && job.FacilityId != null)
                 {
                     var facility = await FacilityService.GetFacility(job.FacilityId.Value);
-                    _addLocumJobDtoFormModel.FacilityName = $"{facility?.Id} - {facility?.Name}";
+                    _addJobDtoFormModel.FacilityName = $"{facility?.Id} - {facility?.Name}";
                 }
 
                 _existingJob = true;
@@ -319,7 +319,7 @@
             await _form.Validate();
             if (_form.IsValid)
             {
-                await JobService.AddJob(_addLocumJobDtoFormModel);
+                await JobService.AddJob(_addJobDtoFormModel);
 
                 SnackBar.Add("Job Added!", Severity.Success);
                 await _form.ResetAsync();
@@ -338,7 +338,7 @@
             await _form.Validate();
             if (_form.IsValid)
             {
-                await JobService.UpdateJob(int.Parse(Id!), _addLocumJobDtoFormModel);
+                await JobService.UpdateJob(int.Parse(Id!), _addJobDtoFormModel);
             
                 SnackBar.Add("Job Updated!", Severity.Success);
             }
@@ -371,7 +371,7 @@
         switch (type)
         {
             case DataFetchEnum.Facilities:
-                _addLocumJobDtoFormModel.FacilityId = sanitizedValue;
+                _addJobDtoFormModel.FacilityId = sanitizedValue;
                 break;
         }
     }
