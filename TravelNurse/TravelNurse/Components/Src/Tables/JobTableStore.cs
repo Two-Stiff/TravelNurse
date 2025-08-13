@@ -26,6 +26,7 @@ public static class JobsTableFilter
     public const string ExpiredOnDateBefore = "ExpiredOnDateBefore";
     public const string ExpiredOnDateAfter = "ExpiredOnDateAfter";
     public const string DisciplineId = "DisciplineId";
+    public const string PlatformId = "PlatformId";
 }
 
 public class JobTableStore

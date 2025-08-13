@@ -213,8 +213,11 @@ else
                     SelectedItems="JobTableContextStore.SelectedPlatformFilterItems"
                     Options="JobTableContextStore.Platforms"
                     FilterDefinitionState="_filterDefinition"
+                    FilterOptions="FilterOptions"
+                    UpdateFilterOptions="@(v => FilterOptions = v)"
                     UpdateSelectedItems="@(v => JobTableContextStore.SelectedPlatformFilterItems = v)"
                     UpdateOptions="@(v => JobTableContextStore.Platforms = v)"
+                    PropertyName="@JobsTableFilter.PlatformId"
                     />
             </FilterTemplate>
             <CellTemplate>

@@ -67,7 +67,7 @@ public class JobService : IJobService
         foreach (var filter in filters)
             if (filter?.Value != null && !string.IsNullOrEmpty(filter.PropertyName) && !string.IsNullOrEmpty(filter.Operator))
             {
-                var predicate = ExpressionBuilder.BuildPredicate<Job>(
+                var predicate = ExpressionBuilderV2.BuildPredicate<Job>(
                     filter.PropertyName,
                     filter.Operator,
                     filter.Value
@@ -75,7 +75,7 @@ public class JobService : IJobService
                 jobFilterPredicates.Add(predicate);
             }
 
-        var jobFilterList = ExpressionBuilder.AndAll(jobFilterPredicates.ToArray());
+        var jobFilterList = ExpressionBuilderV2.AndAll(jobFilterPredicates.ToArray());
 
         await using var context = await _context.CreateDbContextAsync();
         
