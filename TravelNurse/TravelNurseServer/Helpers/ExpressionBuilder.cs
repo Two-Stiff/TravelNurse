@@ -194,7 +194,7 @@ public static class ExpressionBuilder
         return Expression.Lambda<Func<T, bool>>(body!, param);
     }
     
-    public static (Expression Expression, Type Type, bool IsNullableReference) BuildMemberAccess(Expression root, string path)
+    public static (Expression Expression, Type Type, bool IsNullableReference) BuildMemberAccessV1(Expression root, string path)
     {
         if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentException("Property path must be non-empty.", nameof(path));
@@ -268,6 +268,91 @@ public static class ExpressionBuilder
         return (expr, currentType, isNullableReference);
     }
 
+    
+    public static (Expression Expression, Type Type, bool IsNullableReference) BuildMemberAccess(Expression root, string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentException("Property path must be non-empty.", nameof(path));
+
+        // Special case for FullName
+        if (string.Equals(path, "FullName", StringComparison.OrdinalIgnoreCase))
+        {
+            var firstName = Expression.Property(root, "FirstName");
+            var lastName = Expression.Property(root, "LastName");
+            var space = Expression.Constant(" ");
+
+            // Use string.Concat with three parameters
+            var concat = Expression.Call(
+                typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string), typeof(string) })!,
+                firstName, space, lastName
+            );
+
+            // Since FullName is computed from strings, we mark it as nullable
+            return (concat, typeof(string), true);
+        }
+
+        var expr = root;
+        var currentType = root.Type;
+        var segments = path.Split('.');
+        bool isNullableReference = false;
+
+        var nullabilityContext = new NullabilityInfoContext();
+
+        for (var i = 0; i < segments.Length; i++)
+        {
+            var segment = segments[i];
+            currentType = Nullable.GetUnderlyingType(currentType) ?? currentType;
+
+            var propInfo = currentType.GetProperty(segment,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+
+            if (propInfo != null)
+            {
+                expr = Expression.Property(expr, propInfo);
+                currentType = propInfo.PropertyType;
+
+                // Check nullability
+                if (!currentType.IsValueType || currentType == typeof(string))
+                {
+                    var nullability = nullabilityContext.Create(propInfo);
+                    isNullableReference = nullability.ReadState == NullabilityState.Nullable;
+                }
+
+                continue;
+            }
+
+            var fieldInfo = currentType.GetField(segment,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+
+            if (fieldInfo != null)
+            {
+                expr = Expression.Field(expr, fieldInfo);
+                currentType = fieldInfo.FieldType;
+                continue;
+            }
+
+            if (currentType.IsEnum)
+            {
+                if (!Enum.IsDefined(currentType, segment))
+                    throw new InvalidOperationException(
+                        $"'{segment}' is not a valid enum value for '{currentType.Name}'.");
+
+                var enumVal = Enum.Parse(currentType, segment, true);
+                expr = Expression.Constant(enumVal, currentType);
+
+                if (i < segments.Length - 1)
+                    throw new InvalidOperationException($"Cannot access beyond enum value '{segment}'.");
+
+                return (expr, currentType, false);
+            }
+
+            throw new InvalidOperationException($"'{segment}' is not a property or field of '{currentType.Name}'.");
+        }
+
+        return (expr, currentType, isNullableReference);
+    }
+
+    
     public static bool IsNumericType(Type t)
     {
         t = Nullable.GetUnderlyingType(t) ?? t; // unwrap Nullable<T>

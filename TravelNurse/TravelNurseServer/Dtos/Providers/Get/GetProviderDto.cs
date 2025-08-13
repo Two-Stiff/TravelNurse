@@ -12,6 +12,8 @@ public class GetProviderDto : BaseGetDto
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     
+    public string? FullName { get; set; }
+    
     public string? MaidenName { get; set; }
     public string? PrimaryPhoneNumber { get; set; }
     

@@ -32,6 +32,23 @@ else
                     <MudText @onclick="@(() => RowCellClicked(context.Item.Id))">@context.Item.Id</MudText>
                 </CellTemplate>
             </PropertyColumn>
+            
+            <PropertyColumn Property="@(item => item.FullName)" Title="Full Name">
+                <FilterTemplate>
+                    <TextInputTableFilter
+                        T="GetProviderDto"
+                        Context="context"
+                        FilterOpenState="AllProviderTableContextStore.FullNameFilterOpen"
+                        FilterDefinitionState="_filterDefinition"
+                        FilterOptions="FilterOptions"
+                        UpdateFilterOptions="@(v => FilterOptions = v)"
+                        PropertyName="@AllProviderTableFilter.FullName"
+                        FilterString="@FullName"
+                        FilterStringChanged="@(v => FullName = v)"
+                    />
+                </FilterTemplate>
+            </PropertyColumn>
+            
             <PropertyColumn Property="@(item => item.FirstName)" Title="First Name">
                 <FilterTemplate>
                     <TextInputTableFilter
@@ -136,6 +153,7 @@ else
     // SupplyParameterFromQuery is only available on the component level
     // It will not work if you force it down from the context store
     [SupplyParameterFromQuery] string? FirstName { get; set; }
+    [SupplyParameterFromQuery] string? FullName { get; set; }
     [SupplyParameterFromQuery] string? LastName { get; set; }
     [SupplyParameterFromQuery] int? IsPrimaryPhoneNumberInService { get; set; }
     [SupplyParameterFromQuery] DateTime? DateOfBirthBefore { get; set; }
@@ -154,6 +172,7 @@ else
     
     protected override void OnInitialized()
     {
+        // Loop through a list of defined query param filter before page load
         foreach (var param in AllProviderTableContextStore.QueryParamFilterList)
         {
             var queryParamProperty = GetType().GetProperty(param.PropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -162,6 +181,7 @@ else
             {
                 var value = queryParamProperty.GetValue(this);
 
+                // Some filters like date has "before date" and "after date" options associate to it
                 var propertyName = QueryParamHelper.FindPropertyName(
                     AllProviderTableContextStore.QueryParamFilters, param.PropertyName
                 );

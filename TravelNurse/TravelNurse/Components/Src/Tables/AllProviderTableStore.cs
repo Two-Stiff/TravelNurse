@@ -13,6 +13,7 @@ namespace TravelNurse.Components.Src.Tables;
 
 public static class AllProviderTableFilter
 {
+    public const string FullName = "FullName";
     public const string FirstName = "FirstName";
     public const string LastName = "LastName";
     public const string IsPrimaryPhoneNumberInService = "IsPrimaryPhoneNumberInService";
@@ -37,6 +38,7 @@ public class AllProviderTableStore
     public void OpenDisciplineFilter() => DisciplineFilterOpen = !DisciplineFilterOpen;
     public HashSet<SelectOption> SelectedDisciplineFilterItems { get; set; } = new();
     
+    public bool FullNameFilterOpen { get; set; }
     public bool FirstNameFilterOpen { get; set; }
     public bool LastNameOpen { get; set; }
     
@@ -47,6 +49,11 @@ public class AllProviderTableStore
     // Query Param
     public readonly List<QueryParamFilterDto> QueryParamFilters =
     [
+        new()
+        {
+            PropertyName = AllProviderTableFilter.FullName,
+            MatchingFilterNames = [AllProviderTableFilter.FullName]
+        },
         new()
         {
             PropertyName = AllProviderTableFilter.FirstName,
@@ -77,6 +84,12 @@ public class AllProviderTableStore
     
     public readonly List<QueryParamDto> QueryParamFilterList =
     [
+        new()
+        {
+            PropertyName = AllProviderTableFilter.FullName,
+            Operator = FilterOperatorType.StringContains,
+            Type = QueryParamTypeEnum.String
+        },
         new()
         {
             PropertyName = AllProviderTableFilter.FirstName,

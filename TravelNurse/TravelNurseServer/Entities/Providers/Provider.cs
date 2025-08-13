@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Core;
 using Core.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -100,4 +101,9 @@ public class Provider : Entity
     public Discipline? Discipline { get; set; }
     
     public bool IsPriority { get; set; } = Constants.DefaultBoolean;
+
+    // Suppose that I have this property in my entity class
+    // Is there a way to build out the expression like x => (x.FirstName + " " x.LastName).Contains("i")
+    [NotMapped]
+    public string FullName => $"{FirstName} {LastName}";
 }
