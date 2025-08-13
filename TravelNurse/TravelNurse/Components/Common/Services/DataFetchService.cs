@@ -14,14 +14,20 @@ public interface IDataFetchService
 public class DataFetchService : IDataFetchService
 {
     private readonly IDisciplineService _disciplineService;
+    private readonly IFacilityService _facilityService;
+    private readonly IPlatformService _platformService;
     private readonly ISnackbar _snackbar;
 
     public DataFetchService(
         IDisciplineService disciplineService,
+        IFacilityService facilityService,
+        IPlatformService platformService,
         ISnackbar snackbar
     )
     {
         _snackbar = snackbar;
+        _facilityService  = facilityService;
+        _platformService = platformService;
         _disciplineService = disciplineService;
     }
 
@@ -47,19 +53,19 @@ public class DataFetchService : IDataFetchService
         switch (type)
         {
             case DataFetchEnum.Disciplines:
-                var locumDisciplines = await _disciplineService.GetDisciplines();
-                list = SelectOptionHelper.ConvertToSelectOptionsByNameProperty("Abbreviation", "Id", locumDisciplines, addDefaultOption);
+                var disciplines = await _disciplineService.GetDisciplines();
+                list = SelectOptionHelper.ConvertToSelectOptionsByNameProperty("Name", "Id", disciplines, addDefaultOption);
                 return list;
             
-            // case DataFetchEnum.Platforms:
-            //     var platforms = await _platformService.GetPlatform();
-            //     list = SelectOptionHelper.ConvertToSelectOptionsByNameProperty("Name", "Id", platforms, addDefaultOption);
-            //     return list;
-            //
-            // case DataFetchEnum.Facilities:
-            //     var facilities = await _facilityService.GetFacilities(text ?? "");
-            //     list = SelectOptionHelper.ConvertToSelectOptionsByNameProperty("Name", "Id", facilities, addDefaultOption);
-            //     return list;
+            case DataFetchEnum.Platforms:
+                var platforms = await _platformService.GetPlatform();
+                list = SelectOptionHelper.ConvertToSelectOptionsByNameProperty("Name", "Id", platforms, addDefaultOption);
+                return list;
+            
+            case DataFetchEnum.Facilities:
+                var facilities = await _facilityService.GetFacilities(text ?? "");
+                list = SelectOptionHelper.ConvertToSelectOptionsByNameProperty("Name", "Id", facilities, addDefaultOption);
+                return list;
 
             case DataFetchEnum.Specialties:
                 var specialties = await _disciplineService.GetDisciplineSpecialties(id ?? 0);

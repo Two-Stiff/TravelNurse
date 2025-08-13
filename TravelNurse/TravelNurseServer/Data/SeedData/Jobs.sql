@@ -63,7 +63,6 @@ BEGIN
                 "StartDate",
                 "ExpiresOn",
                 "RepostedOn",
-                "ClientManagerId",
                 "FacilityId",
                 "DisciplineId",
                 "SpecialtyId",
@@ -86,8 +85,7 @@ BEGIN
                          dt_now - (random() * INTERVAL '30 days'),
                          dt_now + (60 + FLOOR(random() * 60)) * INTERVAL '1 day',
                          dt_now - (random() * INTERVAL '15 days'),
-                         1 + FLOOR(random() * 10)::int,
-                         1 + FLOOR(random() * 10)::int,
+                         1 + FLOOR(random())::int, --facility Id
                          1 + FLOOR(random() * 10)::int,
                          1 + FLOOR(random() * 10)::int,
                          (random() < 0.5),

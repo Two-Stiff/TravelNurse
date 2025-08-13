@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Core.Dto;
 
 namespace TravelNurseServer.Dtos.Common.Get;
 
-public class GetDisciplineSpecialtyDto
+public class GetDisciplineSpecialtyDto : BaseGetDto
 {
     public int DisciplineId { get; set; }
     

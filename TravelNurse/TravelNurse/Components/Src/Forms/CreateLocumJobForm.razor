@@ -180,29 +180,7 @@
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="12" Md="12"
                 />
-
-                <MudItemSelectField
-                T="int?"
-                OptionalValue="@_addLocumJobDtoFormModel.JobLicenseTypeId"
-                OptionalValueChanged="@(v => _addLocumJobDtoFormModel.JobLicenseTypeId = v)"
-                OptionalFor="@(() => _addLocumJobDtoFormModel.JobLicenseTypeId)"
-                Options="_jobBoardLicenseTypes"
-                Label="Job Board Licenses"
-                IsOptionalField="true"
-                IsFormDependencyLoading="_isLoadingAllDependencies"
-                Xs="6" Md="4"/>
-
-                <MudItemSelectField
-                T="int?"
-                OptionalValue="@_addLocumJobDtoFormModel.JobCertificationTypeId"
-                OptionalValueChanged="@(v => _addLocumJobDtoFormModel.JobCertificationTypeId = v)"
-                OptionalFor="@(() => _addLocumJobDtoFormModel.JobCertificationTypeId)"
-                Options="_jobBoardCertificationTypes"
-                Label="Job Board Certifications"
-                IsOptionalField="true"
-                IsFormDependencyLoading="_isLoadingAllDependencies"
-                Xs="6" Md="4"/>
-
+                
                 @* Check box section *@
                 <MudGrid Style="margin-top: 2rem;">
 

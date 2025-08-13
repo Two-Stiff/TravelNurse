@@ -1,48 +1,49 @@
 using System.ComponentModel.DataAnnotations;
+using Core.Dto;
 
 namespace TravelNurseServer.Dtos.Common.Get;
 
-public class GetFacilityDto
+public class GetFacilityDto : BaseGetDto
 
 {
     [Required]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Required]
-    public string StreetAddress { get; set; }
+    public string? StreetAddress { get; set; }
 
     [Required]
-    public string City { get; set; }
+    public string? City { get; set; }
 
     [Required]
-    public string ZipCode { get; set; }
+    public string? ZipCode { get; set; }
 
     [Required]
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 
     [Required]
-    public string MailingAddress { get; set; }
+    public string? MailingAddress { get; set; }
 
     [Required]
-    public string MailingCity { get; set; }
+    public string? MailingCity { get; set; }
 
     [Required]
-    public string MailingZipCode { get; set; }
+    public string? MailingZipCode { get; set; }
 
     [Required]
-    public string Fax { get; set; }
+    public string? Fax { get; set; }
 
     [Required]
-    public string BillingName { get; set; }
+    public string? BillingName { get; set; }
 
     [Required]
-    public string WebsiteLink { get; set; }
+    public string? WebsiteLink { get; set; }
 
     [Required]
-    public string PermanentNote { get; set; }
+    public string? PermanentNote { get; set; }
 
     [Required]
-    public string PayrollBillingNote { get; set; }
+    public string? PayrollBillingNote { get; set; }
 
     [Required]
     public int BedSize { get; set; }
@@ -81,13 +82,13 @@ public class GetFacilityDto
     [Required]
     public int StateId { get; set; }
 
-    public GetStateDto State { get; set; }
+    public GetStateDto? State { get; set; }
 
     public int? MailingStateId { get; set; }
 
     public GetStateDto? MailingState { get; set; }
     
     [Required]
-    public string DoNotRehireReason { get; set; }
+    public string? DoNotRehireReason { get; set; }
     
 }

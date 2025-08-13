@@ -79,11 +79,5 @@ public class AddJobDto
 
     [Required]
     public string ContactName { get; set; } = Constants.DefaultString;
-
-    [NotEqual(-1, "Please select a value")]
-    public int? JobCertificationTypeId { get; set; } = -1;
-
-    [NotEqual(-1, "Please select a value")]
-    public int? JobLicenseTypeId { get; set; } = -1;
     
 }

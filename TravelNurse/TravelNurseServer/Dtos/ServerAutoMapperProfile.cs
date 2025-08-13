@@ -21,6 +21,7 @@ public class ServerAutoMapperProfile : Profile
         CreateMap<DisciplineSpecialty, GetDisciplineSpecialtyDto>().ReverseMap();
         CreateMap<Specialty, GetSpecialtyDto>().ReverseMap();
         CreateMap<SubSpecialty, GetSubSpecialtyDto>().ReverseMap();
+        CreateMap<State, GetStateDto>().ReverseMap();
         
         CreateMap<Facility, GetFacilityDto>().ReverseMap();
         CreateMap<Job, GetJobDto>().ReverseMap();

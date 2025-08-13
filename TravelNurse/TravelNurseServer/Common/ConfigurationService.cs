@@ -9,7 +9,8 @@ public static class ConfigurationService
         services.AddScoped<IDisciplineService, DisciplineService>();
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IProviderService, ProviderService>();
-
+        services.AddScoped<IFacilityService, FacilityService>();
+        services.AddScoped<IPlatformService, PlatformService>();
         return services;
     }
 }

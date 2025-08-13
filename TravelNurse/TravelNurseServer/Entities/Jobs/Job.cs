@@ -40,10 +40,7 @@ public class Job : Entity
     public DateTime ExpiresOn { get; set; } = Constants.DefaultDateTime;
     
     public DateTime RepostedOn { get; set; } = Constants.DefaultDateTime;
-
-    public int? ClientManagerId { get; set; } // FK
     
-
     public int? FacilityId { get; set; } //FK
     
     public Facility? Facility { get; set; }

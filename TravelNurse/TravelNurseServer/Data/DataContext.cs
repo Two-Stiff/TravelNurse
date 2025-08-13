@@ -34,5 +34,4 @@ public class DataContext (DbContextOptions<DataContext> options) : DbContext(opt
     
     public DbSet<Platform> Platforms => Set<Platform>();
     
-
 }

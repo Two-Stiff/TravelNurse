@@ -16,6 +16,13 @@ public static class LinqExtensions
             ? transforms.Aggregate(query, (current, transform) => transform(current))
             : query;
     }
+    
+    public static IQueryable<TResult> SelectOnly<TSource, TResult>(
+        this IQueryable<TSource> query,
+        Expression<Func<TSource, TResult>> selector)
+    {
+        return (IQueryable<TResult>)query;
+    }
 
     /// <summary>
     /// Alternative to single or default that requires handling of the case where more than one matching instance exists

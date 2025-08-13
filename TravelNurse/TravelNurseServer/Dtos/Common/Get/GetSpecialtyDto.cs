@@ -1,6 +1,8 @@
+using Core.Dto;
+
 namespace TravelNurseServer.Dtos.Common.Get;
 
-public class GetSpecialtyDto
+public class GetSpecialtyDto : BaseGetDto
 {
     public string? Name { get; set; }
     
