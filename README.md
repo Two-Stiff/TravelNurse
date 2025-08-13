@@ -1,19 +1,24 @@
-Tech Stack
---------------------------
--- MudBlazor
--- Entity Framework
--- PostgresQL
+# Welcome to the Travel Nurse Portal
+**This application is currently work in progress**
+
+You as a user will play the recruiter's role.
+<br>
+<br>
+Your job is to help the medical professionals in the portal to find a matching job based on what's being listed on their profile
 
 
-Pattern
---------------------------
--- Dto / Service injection
+## Technology Stack
+**Blazor**
+<br>
+**MudBlazor** 
+<br>
+**Entity Framework**
+<br>
+**PostgreSQL** 
 
 
-Troubleshoot
---------------------------
--- Postgresql entity framework relation "table" does not exist
-    -- Make sure the connection string is correct and the right database is connected
-
--- Parallel calls at the same time between parent and child using the same context
-    -- Use DbContextFactory
+## To run the project locally
+* Download and install PostgreSQL and PgAdmin
+* Ensure .NET 8 is properly setup
+* Establish the DB connection in Rider (You can use other IDEs if you'd like)
+* Run the SeedData SQL scripts to populate the database in the TravelNurseServer project
