@@ -98,6 +98,7 @@ public static class ExpressionBuilder
             }
             else if (baseType.IsEnum)
             {
+                // This will account for both Enum and Enum? types
                 object? convertedValue = null;
                 if (typedValue != null)
                     convertedValue = Enum.ToObject(baseType, typedValue);
