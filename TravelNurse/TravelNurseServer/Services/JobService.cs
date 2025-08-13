@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TravelNurseServer.Data;
 using TravelNurseServer.Dtos.DataGridDtos;
+using TravelNurseServer.Dtos.Jobs.Add;
 using TravelNurseServer.Dtos.Jobs.Get;
 using TravelNurseServer.Dtos.TablePaginationParams;
 using TravelNurseServer.Entities.Jobs;
@@ -13,7 +14,7 @@ namespace TravelNurseServer.Services;
 
 public interface IJobService
 {
-    // Task AddJob(AddJobDto addTravelerDto);
+    Task AddJob(AddJobDto addTravelerDto);
     //
     Task<DataGridListItemDto<GetJobDto>> GetJobDataGrid<T>(GridDataRequestDto<T> state, List<DataGridFilterDto> filters);
     
@@ -83,5 +84,31 @@ public class JobService : IJobService
             Items = items,
             ItemTotalCount = jobsCount
         };
+    }
+    
+    public async Task AddJob(AddJobDto addJobDto)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+
+        var job = _mapper.Map<Job>(addJobDto);
+        await context.Jobs.AddAsync(job);
+        await context.SaveChangesAsync();
+        
+
+        var subSpecialties = new List<AddJobSubSpecialtyDto>();
+        foreach (var item in addJobDto.SelectedSubSpecialties)
+        {
+            subSpecialties.Add(new AddJobSubSpecialtyDto()
+            {
+                JobId = job.Id,
+                SubSpecialtyId = item.Id,
+                IsRequired = item.Selected
+            });
+        }
+        var data = _mapper.Map<List<JobSubSpecialty>>(subSpecialties);
+
+        await context.JobSubSpecialties.AddRangeAsync(data);
+        await context.SaveChangesAsync();
+
     }
 }

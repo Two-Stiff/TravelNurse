@@ -1,0 +1,94 @@
+@using System.Linq.Expressions
+@using Core.Utils
+@using TravelNurseServer.Helpers
+@typeparam T
+
+@if (IsFormDependencyLoading != null && IsFormDependencyLoading == true)
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="30px" />
+    </MudItem>
+}
+else
+{
+    @if (IsOptionalField == true)
+    {
+        <MudItem xs="@Xs" md="@Md">
+            <MudSelect T="int?"
+                       Value="OptionalValue"
+                       ValueChanged="@OptionalValueChanged"
+                       For="OptionalFor"
+                       Immediate="true"
+                       Label="@Label"
+                       Disabled="@Disabled">
+                @foreach (var option in Options)
+                {
+                    <MudSelectItem T="int?" Value="option.Id">@option.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+    }
+    else
+    {
+        <MudItem xs="@Xs" md="@Md">
+            <MudSelect T="int"
+                       Value="Value"
+                       ValueChanged="@ValueChanged"
+                       For="For"
+                       Immediate="true"
+                       Label="@Label"
+                       Disabled="@Disabled">
+                @foreach (var option in Options)
+                {
+                    <MudSelectItem T="int" Value="option.Id">@option.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+    }
+}
+
+
+
+
+@code {
+    [Parameter] public List<SelectOption> Options { get; set; } = new();
+
+    [Parameter] public int Value { get; set; }
+
+    [Parameter] public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<int>>? For { get; set; }
+
+    // If the field is optional, use these 3 parameters below instead
+
+    [Parameter] public int? OptionalValue { get; set; }
+
+    [Parameter] public EventCallback<int?> OptionalValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<int?>>? OptionalFor { get; set; }
+    
+    [Parameter] public string Label { get; set; } = Constants.DefaultString;
+
+    [Parameter] public bool Disabled { get; set; } = Constants.DefaultBoolean;
+
+    [Parameter] public bool? IsOptionalField { get; set; } = Constants.DefaultBoolean;
+    
+    [Parameter] public bool? IsFormDependencyLoading { get; set; } = Constants.DefaultBoolean;
+
+    [Parameter] public int Xs { get; set; } = 6;
+
+    [Parameter] public int Md { get; set; } = 6;
+}
+
+@* Example usage *@
+
+@* <MudItemSelectField *@
+@*     T="int" *@
+@*     Value="@addLocumJobDtoFormModel.ClientManagerId" *@
+@*     ValueChanged="@(v => addLocumJobDtoFormModel.ClientManagerId = v)" *@
+@*     For="@(() => addLocumJobDtoFormModel.ClientManagerId)" *@
+@*     Options="_clientManagers" *@
+@*     Label="Client Manager X" *@
+@*     Xs="4" Md="4" *@
+@* /> *@
+@* *@

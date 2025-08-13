@@ -1,0 +1,120 @@
+@using System.Linq.Expressions
+@using Core.Utils
+@using TravelNurseServer.Helpers
+@inject ISnackbar Snackbar
+@typeparam T
+
+
+@if (IsFormDependencyLoading != null && IsFormDependencyLoading == true)
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="30px" />
+    </MudItem>
+}
+else
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudSelect T="string"
+                   MultiSelection="true"
+                   AnchorOrigin="Origin.BottomCenter"
+                   SelectedValues="@(string.IsNullOrWhiteSpace(DisplayValue)
+                                       ? new List<string>()
+                                       : DisplayValue.Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList())"
+                   SelectedValuesChanged="@(x => HandleSelectedValuesChanged(x))"
+                   For="DisplayFor"
+                   Immediate="true"
+                   Label="@Label"
+        >
+            @foreach (var option in Options)
+            {
+                <MudSelectItem T="string" Value="@option.Name">@option.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>   
+}
+
+@code {
+    [Parameter] public List<SelectOption> Options { get; set; } = new();
+
+    [Parameter] public string DisplayValue { get; set; } = string.Empty;
+
+    [Parameter] public EventCallback<string> DisplayValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<string>>? DisplayFor { get; set; }
+    
+    [Parameter] public List<int> IdList { get; set; } = new List<int>();
+    
+    [Parameter] public EventCallback<List<int>> IdListValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<List<int>>>? IdListFor { get; set; }
+
+    [Parameter] public string Label { get; set; } = Constants.DefaultString;
+    
+    [Parameter] public bool? IsFormDependencyLoading { get; set; } = Constants.DefaultBoolean;
+    
+    [Parameter] public bool DisableDiscipline { get; set; } = Constants.DefaultBoolean;
+
+    [Parameter] public int Xs { get; set; } = 6;
+
+    [Parameter] public int Md { get; set; } = 6;
+
+    // private async void HandleSelectedValuesChanged(IEnumerable<string> changedValues)
+    // {
+    //     DisplayValue = string.Join(",", changedValues);
+    //     var idList = new List<int>();
+    //     
+    //
+    //     foreach (var selectedOption in changedValues.ToList())
+    //     {
+    //         var option = Options.Find(x => x.Name == selectedOption);
+    //         if (option != null)
+    //         {
+    //             idList.Add(option.Id);
+    //         }
+    //     }
+    //     
+    //     await DisplayValueChanged.InvokeAsync(DisplayValue);
+    //     await IdListValueChanged.InvokeAsync(idList.ToList());
+    // }
+    
+    private async void HandleSelectedValuesChanged(IEnumerable<string> changedValues)
+    {
+        try
+        {
+            var enumerable = changedValues.ToList();
+            DisplayValue = string.Join(",", enumerable);
+            var idList = new List<int>();
+        
+
+            foreach (var selectedOption in enumerable.ToList())
+            {
+                var option = Options.Find(x => x.Name == selectedOption);
+                if (option != null)
+                {
+                    idList.Add(option.Id);
+                }
+            }
+        
+            await DisplayValueChanged.InvokeAsync(DisplayValue);
+            await IdListValueChanged.InvokeAsync(idList.ToList());
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add(e.Message, Severity.Error);
+        }
+    }
+// Example
+    @* <MudMultiSelectField *@
+    @*     T="string" *@
+    @*     Options="_jobBoardCertifiedSpecialtyTypes" *@
+    @*     DisplayValue="@_addLocumJobDtoFormModel.JobBoardCertifiedSpecialtyTypeName" *@
+    @*     DisplayValueChanged="@(v => _addLocumJobDtoFormModel.JobBoardCertifiedSpecialtyTypeName = v)" *@
+    @*     DisplayFor="@(() => _addLocumJobDtoFormModel.JobBoardCertifiedSpecialtyTypeName)" *@
+    @*     IdList="_addLocumJobDtoFormModel.JobBoardCertifiedSpecialtyTypeId" *@
+    @*     IdListValueChanged="@(v => _addLocumJobDtoFormModel.JobBoardCertifiedSpecialtyTypeId = v)" *@
+    @*     IdListFor="@(() => _addLocumJobDtoFormModel.JobBoardCertifiedSpecialtyTypeId)" *@
+    @*     Label="Job Board Certified Specialties" *@
+    @*     IsFormDependencyLoading="_isLoadingAllDepdencies" *@
+    @*     Xs="12" Md="12" *@
+    @* /> *@
+}

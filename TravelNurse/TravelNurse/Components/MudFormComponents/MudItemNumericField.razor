@@ -1,0 +1,42 @@
+@using System.Linq.Expressions
+@using Core.Utils
+@typeparam T
+
+@if (IsFormDependencyLoading != null && IsFormDependencyLoading == true)
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="30px" />
+    </MudItem>
+}
+else
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudNumericField T="T"
+                         Value="Value"
+                         ValueChanged="ValueChanged"
+                         For="For"
+                         Immediate="true"
+                         Label="@Label"
+                         Disabled="@Disabled"
+        />
+    </MudItem>    
+}
+
+
+@code {
+    [Parameter] public T? Value { get; set; }
+
+    [Parameter] public EventCallback<T> ValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<T>>? For { get; set; }
+
+    [Parameter] public string? Label { get; set; } = Constants.DefaultString;
+
+    [Parameter] public bool Disabled { get; set; } = Constants.DefaultBoolean;
+    
+    [Parameter] public bool? IsFormDependencyLoading { get; set; } = Constants.DefaultBoolean;
+
+    [Parameter] public int Xs { get; set; } = 6;
+
+    [Parameter] public int Md { get; set; } = 6;
+}

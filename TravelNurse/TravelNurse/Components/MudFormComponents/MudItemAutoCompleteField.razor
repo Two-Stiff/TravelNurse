@@ -1,0 +1,109 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Linq.Expressions
+@using Core.Utils
+@using TravelNurse.Components.Common.Enums
+@using TravelNurseServer.Helpers
+@typeparam T
+
+@if (IsFormDependencyLoading != null && IsFormDependencyLoading == true)
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="30px" />
+    </MudItem>
+}
+else
+{
+    <MudItem xs="@Xs" md="@Md">
+        <MudAutocomplete T="string"
+                         Label="@Label"
+                         Value="Value"
+                         ValueChanged="OnSelectValueChanged"
+                         SearchFunc="@SearchResult"
+                         ResetValueOnEmptyText="@_resetValueOnEmptyText"
+                         CoerceText="@_coerceText"
+                         CoerceValue="@_coerceValue"
+                         SelectValueOnTab="@_selectedOnTab"
+                         Immediate="true"
+                         For="For"
+                         Clearable
+        />
+    </MudItem>
+}
+
+
+@code {
+
+    // Parent form should pass down the list of options from server side fetch
+    [Parameter] [Required] public List<SelectOption> Options { get; set; } = new();
+
+    [Parameter] public string Value { get; set; } = Constants.DefaultString;
+
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<string>>? For { get; set; }
+    
+    [Parameter] public string Label { get; set; } = Constants.DefaultString;
+
+    [Parameter] public bool Disabled { get; set; } = Constants.DefaultBoolean;
+
+    [Parameter] public Color MudBlazorColor { get; set; } = Color.Default;
+
+    [Parameter] public Placement Placement { get; set; } = Placement.Right;
+
+    [Parameter] public int FormValue { get; set; }
+    
+    [Parameter] public int? OptionalFormValue { get; set; }
+    
+    [Parameter] public bool? IsFormDependencyLoading { get; set; } = Constants.DefaultBoolean;
+    
+    [Parameter] public int Xs { get; set; } = 6;
+
+    [Parameter] public int Md { get; set; } = 6;
+
+    [Parameter] public Size Size { get; set; } = Size.Medium;
+
+    [Parameter] public Func<string, DataFetchEnum, CancellationToken, Task<IEnumerable<string>>>? SearchMethod { get; set; }
+
+    [Parameter] public Action<string, DataFetchEnum>? OnValueSelected { get; set; }
+    
+    [Parameter] public DataFetchEnum FetchType { get; set; }
+
+
+    private readonly bool _resetValueOnEmptyText = false;
+    private readonly bool _coerceText = false;
+    private readonly bool _coerceValue = false;
+    private readonly bool _selectedOnTab = false;
+
+
+    private async Task<IEnumerable<string>> SearchResult(string value, CancellationToken token)
+    {
+        if (SearchMethod != null)
+        {
+            return await SearchMethod.Invoke(value, FetchType, token);    
+        }
+
+        return new List<string>();
+    }
+
+    private async Task OnSelectValueChanged(string data)
+    {
+        await ValueChanged.InvokeAsync(data);
+        OnValueSelected?.Invoke(data, FetchType);
+    }
+
+}
+
+@* Example usage  *@
+
+@* <MudItemAutoCompleteField *@
+@*     T="string" *@
+@*     Options="_facilityList" *@
+@*     Value="@_addLocumJobDtoFormModel.FacilityName" *@
+@*     ValueChanged="@(v => _addLocumJobDtoFormModel.FacilityName = v)" *@
+@*     For="@(() => _addLocumJobDtoFormModel.FacilityName)" *@
+@*     FormValue="@_addLocumJobDtoFormModel.FacilityId" *@
+@*     Label="Facility" *@
+@*     SearchMethod="SearchFacility" *@
+@*     OnValueSelected="OnSelectFacilityValue" *@
+@*     Xs="4" Md="4" *@
+@* /> *@

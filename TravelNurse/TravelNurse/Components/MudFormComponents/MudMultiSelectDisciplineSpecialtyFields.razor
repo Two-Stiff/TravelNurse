@@ -1,0 +1,46 @@
+@using System.Linq.Expressions
+@using Core.Utils
+@using TravelNurseServer.Helpers
+@typeparam T
+
+
+@* Working Prototype Multi Select *@
+<MudItem xs="@Xs" md="@Md">
+    <MudSelect T="string"
+               MultiSelection="true"
+               AnchorOrigin="Origin.BottomCenter"
+               SelectedValues="@(string.IsNullOrWhiteSpace(DisciplineValue)
+                                   ? new List<string>()
+                                   : DisciplineValue.Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList())"
+               SelectedValuesChanged="@(x => HandleSelectedValuesChanged(x))"
+               ListClass=""
+    >
+        @foreach (var option in DisciplineOptions)
+        {
+            <MudSelectItem T="string" Value="@option.Name">@option.Name</MudSelectItem>
+        }
+    </MudSelect>
+</MudItem>
+
+@code {
+    [Parameter] public List<SelectOption> DisciplineOptions { get; set; } = new();
+
+    [Parameter] public string DisciplineValue { get; set; } = string.Empty;
+
+    [Parameter] public EventCallback<string> DisciplineValueChanged { get; set; }
+
+    [Parameter] public Expression<Func<string>>? For { get; set; }
+
+    [Parameter] public bool DisableDiscipline { get; set; } = Constants.DefaultBoolean;
+
+    [Parameter] public int Xs { get; set; } = 6;
+
+    [Parameter] public int Md { get; set; } = 6;
+
+    private async void HandleSelectedValuesChanged(IEnumerable<string> changedValues)
+    {
+        DisciplineValue = string.Join(",", changedValues);
+        // await DisciplineValueChanged.InvokeAsync(DisciplineValue);
+    }
+
+}

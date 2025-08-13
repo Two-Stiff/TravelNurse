@@ -1,0 +1,426 @@
+@using Microsoft.AspNetCore.Authentication
+@using TravelNurse.Components.Common.DummyData
+@using TravelNurse.Components.Common.Enums
+@using TravelNurse.Components.Common.Services
+@using TravelNurse.Components.Common.Utils
+@using TravelNurseServer.Enums
+@using TravelNurseServer.Helpers
+@using TravelNurseServer.Services
+@using TravelNurse.Components.MudFormComponents
+@using TravelNurse.Components.Common
+@using TravelNurseServer.Dtos.Jobs.Add
+@inject ISnackbar SnackBar
+@inject IDisciplineService RateTypeService
+@* @inject IFacilityservice Facilityservice *@
+@inject IJobService JobService
+@inject IDataFetchService DataFetchService
+
+<MudCard>
+    <MudForm
+    Model="@_addLocumJobDtoFormModel"
+    @ref="@_form">
+        <MudCardContent>
+            <MudGrid>
+
+                <MudItem xs="12" md="12">
+                    <MudText Typo="Typo.h5">Job information</MudText>
+                </MudItem>
+                <MudItemTextField T="string"
+                Value="@_addLocumJobDtoFormModel.JobTitle"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.JobTitle = v)"
+                For="@(() => _addLocumJobDtoFormModel.JobTitle)"
+                Label="Job Title"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemTextField T="string"
+                Value="@_addLocumJobDtoFormModel.UniqueNotes"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.UniqueNotes = v)"
+                For="@(() => _addLocumJobDtoFormModel.UniqueNotes)"
+                Label="Unique Note"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemTextField T="string"
+                Value="@_addLocumJobDtoFormModel.PlatformJobId"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.PlatformJobId = v)"
+                For="@(() => _addLocumJobDtoFormModel.PlatformJobId)"
+                Label="Platform Job ID"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+
+                <MudItemTextField T="int?"
+                Value="@_addLocumJobDtoFormModel.SourceVendorJobInfoId"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.SourceVendorJobInfoId = v)"
+                For="@(() => _addLocumJobDtoFormModel.SourceVendorJobInfoId)"
+                Label="Source Vendor Job Info Id"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemTextField T="int?"
+                Value="@_addLocumJobDtoFormModel.ContractLengthWeeks"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.ContractLengthWeeks = v)"
+                For="@(() => _addLocumJobDtoFormModel.ContractLengthWeeks)"
+                Label="Contract Length Weeks"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemDatePickerField
+                T="DateTime?"
+                Value="@_addLocumJobDtoFormModel.StartDate"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.StartDate = v)"
+                For="@(() => _addLocumJobDtoFormModel.StartDate)"
+                Label="Start Date"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemDatePickerField
+                T="DateTime?"
+                Value="@_addLocumJobDtoFormModel.ExpiresOn"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.ExpiresOn = v)"
+                For="@(() => _addLocumJobDtoFormModel.ExpiresOn)"
+                Label="Expires On Date"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItem xs="6" md="4">
+                    @* Space holder *@
+                </MudItem>
+
+                <MudItem xs="6" md="4">
+                    @* Space holder *@
+                </MudItem>
+
+                @* Select option section *@
+                
+                <MudItemSelectField
+                T="int"
+                Value="@_addLocumJobDtoFormModel.PlatformId"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.PlatformId = v)"
+                For="@(() => _addLocumJobDtoFormModel.PlatformId)"
+                Options="_platforms"
+                Label="Platform"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemAutoCompleteField
+                T="string"
+                Options="_facilityList"
+                Value="@_addLocumJobDtoFormModel.FacilityName"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.FacilityName = v)"
+                For="@(() => _addLocumJobDtoFormModel.FacilityName)"
+                FormValue="@_addLocumJobDtoFormModel.FacilityId"
+                Label="Facility"
+                SearchMethod="AutoCompleteSearch"
+                OnValueSelected="OnAutoCompleteSelectValue"
+                FetchType="DataFetchEnum.Facilities"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="12" Md="12"
+                />
+
+                <MudSelectDisciplineSpecialtySubSpecialtiesFields
+                T="int"
+                DisciplineValue="@_addLocumJobDtoFormModel.DisciplineId"
+                DisciplineValueChanged="@(v => _addLocumJobDtoFormModel.DisciplineId = v)"
+                DisciplineFor="@(() => _addLocumJobDtoFormModel.DisciplineId)"
+                DisciplineOptions="_disciplines"
+
+                SpecialtyValue="@_addLocumJobDtoFormModel.SpecialtyId"
+                SpecialtyValueChanged="@(v => _addLocumJobDtoFormModel.SpecialtyId = v)"
+                SpecialtyFor="@(() => _addLocumJobDtoFormModel.SpecialtyId)"
+
+                DisplaySubSpecialty="@_addLocumJobDtoFormModel.SubSpecialtyNames"
+                DisplaySubSpecialtyChanged="@(v => _addLocumJobDtoFormModel.SubSpecialtyNames = v)"
+                DisplaySubSpecialtyFor="@(() => _addLocumJobDtoFormModel.SubSpecialtyNames)"
+
+                UpdateSelectedSubSpecialties="@(v => _addLocumJobDtoFormModel.SelectedSubSpecialties = v)"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+
+                <MudItem xs="12" md="12">
+                    @if (_addLocumJobDtoFormModel.SelectedSubSpecialties.Count > 1)
+                    {
+                        <MudText Typo="Typo.body1">Please select the required Sub-Specialties: </MudText>
+                    }
+                </MudItem>
+
+                <MudItem xs="12" md="12">
+                    <div Style="display: flex; justify-content: flex-start;">
+                        @foreach (var sub in _addLocumJobDtoFormModel.SelectedSubSpecialties)
+                        {
+                            <MudSwitch @bind-Value="sub.Selected"
+                            Label="@sub.Name"/>
+                        }
+                    </div>
+                </MudItem>
+
+                <MudItemSelectField
+                T="int"
+                Value="@_addLocumJobDtoFormModel.JobType"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.JobType = v)"
+                For="@(() => _addLocumJobDtoFormModel.JobType)"
+                Options="_jobType"
+                Label="JobTypes"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemAutoCompleteField
+                T="string"
+                Options="_contacts"
+                Value="@_addLocumJobDtoFormModel.ContactName"
+                ValueChanged="@(v => _addLocumJobDtoFormModel.ContactName = v)"
+                For="@(() => _addLocumJobDtoFormModel.ContactName)"
+                OptionalFormValue="@_addLocumJobDtoFormModel.ContactId"
+                Label="Contacts"
+                SearchMethod="AutoCompleteSearch"
+                OnValueSelected="OnAutoCompleteSelectValue"
+                FetchType="DataFetchEnum.Contacts"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="12" Md="12"
+                />
+
+                <MudItemSelectField
+                T="int?"
+                OptionalValue="@_addLocumJobDtoFormModel.JobLicenseTypeId"
+                OptionalValueChanged="@(v => _addLocumJobDtoFormModel.JobLicenseTypeId = v)"
+                OptionalFor="@(() => _addLocumJobDtoFormModel.JobLicenseTypeId)"
+                Options="_jobBoardLicenseTypes"
+                Label="Job Board Licenses"
+                IsOptionalField="true"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                <MudItemSelectField
+                T="int?"
+                OptionalValue="@_addLocumJobDtoFormModel.JobCertificationTypeId"
+                OptionalValueChanged="@(v => _addLocumJobDtoFormModel.JobCertificationTypeId = v)"
+                OptionalFor="@(() => _addLocumJobDtoFormModel.JobCertificationTypeId)"
+                Options="_jobBoardCertificationTypes"
+                Label="Job Board Certifications"
+                IsOptionalField="true"
+                IsFormDependencyLoading="_isLoadingAllDependencies"
+                Xs="6" Md="4"/>
+
+                @* Check box section *@
+                <MudGrid Style="margin-top: 2rem;">
+
+                    <MudItemCheckBoxField
+                    T="bool"
+                    Value="@_addLocumJobDtoFormModel.IsFellowshipRequired"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.IsFellowshipRequired = v)"
+                    For="@(() => _addLocumJobDtoFormModel.IsFellowshipRequired)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Fellowship Required?"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                    <MudItemCheckBoxField
+                    T="bool?"
+                    Value="@_addLocumJobDtoFormModel.HideCity"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.HideCity = v)"
+                    For="@(() => _addLocumJobDtoFormModel.HideCity)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Hide City"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                    <MudItemCheckBoxField
+                    T="bool?"
+                    Value="@_addLocumJobDtoFormModel.AllowsAutoposterUpdate"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.AllowsAutoposterUpdate = v)"
+                    For="@(() => _addLocumJobDtoFormModel.AllowsAutoposterUpdate)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Allow AutoPoster Update"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                    <MudItemCheckBoxField
+                    T="bool?"
+                    Value="@_addLocumJobDtoFormModel.Active"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.Active = v)"
+                    For="@(() => _addLocumJobDtoFormModel.Active)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Active"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                    <MudItemCheckBoxField
+                    T="bool?"
+                    Value="@_addLocumJobDtoFormModel.HousingProvided"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.HousingProvided = v)"
+                    For="@(() => _addLocumJobDtoFormModel.HousingProvided)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Housing Provided"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                    <MudItemCheckBoxField
+                    T="bool?"
+                    Value="@_addLocumJobDtoFormModel.AutoPosted"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.AutoPosted = v)"
+                    For="@(() => _addLocumJobDtoFormModel.AutoPosted)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Auto Posted"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                    <MudItemCheckBoxField
+                    T="bool?"
+                    Value="@_addLocumJobDtoFormModel.HideExternally"
+                    ValueChanged="@(v => _addLocumJobDtoFormModel.HideExternally = v)"
+                    For="@(() => _addLocumJobDtoFormModel.HideExternally)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Hide Externally"
+                    Size="Size.Small"
+                    Xs="5"
+                    Md="3"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"/>
+                </MudGrid>
+                
+            </MudGrid>
+
+            <MudStack 
+            Style=" justify-content: center; align-items: center;"
+            >
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+
+                OnClick="@(async () => await Submit())">
+                    Add Job
+                </MudButton>
+            </MudStack>
+
+        </MudCardContent>
+    </MudForm>
+</MudCard>
+
+@code {
+
+    MudForm _form = new MudForm();
+
+    // Initial form values can be set here
+    readonly AddJobDto _addLocumJobDtoFormModel = new();
+    
+
+
+    // States
+    private List<SelectOption> _platforms = new();
+    private List<SelectOption> _contacts = new();
+    private List<SelectOption> _disciplines = new();
+    private List<SelectOption> _jobType = new();
+    private List<SelectOption> _shiftPerWeeks = new();
+    private List<SelectOption> _rateTypes = new();
+    private List<SelectOption> _facilityList = new();
+    private List<SelectOption> _jobBoardCertificationTypes = new();
+    private List<SelectOption> _jobBoardLicenseTypes = new();
+
+    // This will dictate whether the form components should show skeleton loaders
+    private bool _isLoadingAllDependencies = true;
+
+    // CreateLocumJobFormFluentValidator _createLocumJobValidator = new();
+    
+
+    protected override void OnInitialized()
+    {
+        _shiftPerWeeks = DummyDataContext.GetShiftPerWeek();
+
+        // Enum selectables 
+        _jobType = SelectOptionHelper.ConvertEnumToSelectOptions<JobType>();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _disciplines = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Disciplines, null, null, true);
+
+            _facilityList = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Facilities, null, null, false);
+            _platforms = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Platforms, null, null, true);
+            _contacts = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Contacts, null, null, true);
+
+            _jobBoardCertificationTypes = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.JobBoardCertificationTypes, null, null, true);
+            _jobBoardLicenseTypes = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.JobBoardLicenseTypes, null, null, true);
+            
+            var rateTypes = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.RateTypes, null, null, null);
+            _rateTypes = SelectOptionHelper.AddNullDefaultOption(rateTypes);
+
+            _isLoadingAllDependencies = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                await JobService.AddJob(_addLocumJobDtoFormModel);
+
+                SnackBar.Add("Job Added!", Severity.Success);
+                await _form.ResetAsync();
+            }
+            else 
+            { 
+                // TODO: figure out why this triggers if optional field left blank (which one?) // Subspecialty or programids?
+                throw new Exception("Invalid Form");
+            }
+        }
+        catch (Exception e)
+        {
+            SnackBar.Add(e.Message, Severity.Error);
+        }
+    }
+
+    private async Task<IEnumerable<string>> AutoCompleteSearch(
+        string value,
+        DataFetchEnum type,
+        CancellationToken token)
+    {
+        await Task.Delay(500, token);
+
+        var newList = await DataFetchService.GetLocumSelectOptions(type, null, value, false);
+
+        if (string.IsNullOrEmpty(value))
+            return newList.Select(x => x.Id == -1 ? x.Name : $"{x.Id} - {x.Name}").ToList();
+
+        return newList.Where(x => $"{x.Id} {x.Name}".Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .Select(x => x.Id == -1 ? x.Name : $"{x.Id} - {x.Name}");
+    }
+
+    private void OnAutoCompleteSelectValue(string value, DataFetchEnum type)
+    {
+        var sanitizedValue = SelectOptionHelper.StripCharsIfContainsDigits(value);
+        switch (type)
+        {
+            case DataFetchEnum.Facilities:
+                _addLocumJobDtoFormModel.FacilityId = sanitizedValue;
+                break;
+            case DataFetchEnum.Contacts:
+                _addLocumJobDtoFormModel.ContactId = sanitizedValue;
+                break;
+        }
+    }
+
+}
