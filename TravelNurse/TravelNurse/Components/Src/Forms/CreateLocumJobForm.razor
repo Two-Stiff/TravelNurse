@@ -1,3 +1,4 @@
+@using AutoMapper
 @using Microsoft.AspNetCore.Authentication
 @using TravelNurse.Components.Common.DummyData
 @using TravelNurse.Components.Common.Enums
@@ -9,11 +10,13 @@
 @using TravelNurse.Components.MudFormComponents
 @using TravelNurse.Components.Common
 @using TravelNurseServer.Dtos.Jobs.Add
+@using TravelNurseServer.Dtos.Jobs.Update
 @inject ISnackbar SnackBar
 @inject IDisciplineService RateTypeService
-@* @inject IFacilityservice Facilityservice *@
+@inject IFacilityService FacilityService
 @inject IJobService JobService
 @inject IDataFetchService DataFetchService
+@inject IMapper Mapper
 
 <MudCard>
     <MudForm
@@ -43,23 +46,6 @@
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
 
-                <MudItemTextField T="string"
-                Value="@_addLocumJobDtoFormModel.PlatformJobId"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.PlatformJobId = v)"
-                For="@(() => _addLocumJobDtoFormModel.PlatformJobId)"
-                Label="Platform Job ID"
-                IsFormDependencyLoading="_isLoadingAllDependencies"
-                Xs="6" Md="4"/>
-
-
-                <MudItemTextField T="int?"
-                Value="@_addLocumJobDtoFormModel.SourceVendorJobInfoId"
-                ValueChanged="@(v => _addLocumJobDtoFormModel.SourceVendorJobInfoId = v)"
-                For="@(() => _addLocumJobDtoFormModel.SourceVendorJobInfoId)"
-                Label="Source Vendor Job Info Id"
-                IsFormDependencyLoading="_isLoadingAllDependencies"
-                Xs="6" Md="4"/>
-
                 <MudItemTextField T="int?"
                 Value="@_addLocumJobDtoFormModel.ContractLengthWeeks"
                 ValueChanged="@(v => _addLocumJobDtoFormModel.ContractLengthWeeks = v)"
@@ -85,15 +71,7 @@
                 Label="Expires On Date"
                 IsFormDependencyLoading="_isLoadingAllDependencies"
                 Xs="6" Md="4"/>
-
-                <MudItem xs="6" md="4">
-                    @* Space holder *@
-                </MudItem>
-
-                <MudItem xs="6" md="4">
-                    @* Space holder *@
-                </MudItem>
-
+                
                 @* Select option section *@
                 
                 <MudItemSelectField
@@ -199,19 +177,6 @@
 
                     <MudItemCheckBoxField
                     T="bool?"
-                    Value="@_addLocumJobDtoFormModel.Active"
-                    ValueChanged="@(v => _addLocumJobDtoFormModel.Active = v)"
-                    For="@(() => _addLocumJobDtoFormModel.Active)"
-                    MudBlazorColor="Color.Secondary"
-                    Placement="Placement.Bottom"
-                    Label="Active"
-                    Xs="5"
-                    Md="3"
-                    IsFormDependencyLoading="_isLoadingAllDependencies"
-                    Size="Size.Small"/>
-
-                    <MudItemCheckBoxField
-                    T="bool?"
                     Value="@_addLocumJobDtoFormModel.HousingProvided"
                     ValueChanged="@(v => _addLocumJobDtoFormModel.HousingProvided = v)"
                     For="@(() => _addLocumJobDtoFormModel.HousingProvided)"
@@ -252,14 +217,23 @@
                 
             </MudGrid>
 
-            <MudStack 
-            Style=" justify-content: center; align-items: center;"
-            >
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
-
-                OnClick="@(async () => await Submit())">
-                    Add Job
-                </MudButton>
+            <MudStack
+                Style=" justify-content: center; align-items: center;">
+                @if (Id != null && _existingJob)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+                               OnClick="@(async () => await UpdateJob())">
+                        Update Job
+                    </MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+                               OnClick="@(async () => await AddJob())">
+                        Add Job
+                    </MudButton>
+                }
+                
             </MudStack>
 
         </MudCardContent>
@@ -268,10 +242,13 @@
 
 @code {
 
+    [SupplyParameterFromQuery]
+    string? Id { get; set; }
+    
     MudForm _form = new MudForm();
 
     // Initial form values can be set here
-    readonly AddJobDto _addLocumJobDtoFormModel = new();
+    AddJobDto _addLocumJobDtoFormModel = new();
     
 
 
@@ -285,14 +262,56 @@
     // This will dictate whether the form components should show skeleton loaders
     private bool _isLoadingAllDependencies = true;
 
+    private bool _existingJob = false;
+    private bool _firstSet = true;
     // CreateLocumJobFormFluentValidator _createLocumJobValidator = new();
+
+    private async Task SetFormInitialValue()
+    {
+        try
+        {
+            if (Id != null)
+            {
+                var job = await JobService.GetJob(int.Parse(Id));
+
+                _addLocumJobDtoFormModel = Mapper.Map<AddJobDto>(job);
+
+                if (job.FacilityId.HasValue && job.FacilityId != null)
+                {
+                    var facility = await FacilityService.GetFacility(job.FacilityId.Value);
+                    _addLocumJobDtoFormModel.FacilityName = $"{facility?.Id} - {facility?.Name}";
+                }
+
+                _existingJob = true;
+            }
+        }
+        catch (Exception e)
+        {
+            SnackBar.Add("Job Not Found", Severity.Error);
+            _existingJob = false;
+        }
+    }
     
+    // Call the base with an empty ParameterView as we've already set the parameters
+    // This will run the normal lifecycle events
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        // This will run before OnInitialized gets kicked off and way before the component renders
+        parameters.SetParameterProperties(this);
+        
+        if (_firstSet)
+        {
+            await SetFormInitialValue();
+        }
+        _firstSet = false;
+        await base.SetParametersAsync(ParameterView.Empty);
+    }
 
     protected override void OnInitialized()
     {
         _jobType = SelectOptionHelper.ConvertEnumToSelectOptions<JobType>();
     }
-
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -306,7 +325,7 @@
         }
     }
 
-    private async Task Submit()
+    private async Task AddJob()
     {
         try
         {
@@ -318,10 +337,23 @@
                 SnackBar.Add("Job Added!", Severity.Success);
                 await _form.ResetAsync();
             }
-            else 
-            { 
-                // TODO: figure out why this triggers if optional field left blank (which one?) // Subspecialty or programids?
-                throw new Exception("Invalid Form");
+        }
+        catch (Exception e)
+        {
+            SnackBar.Add(e.Message, Severity.Error);
+        }
+    }
+
+    private async Task UpdateJob()
+    {
+        try
+        {
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                await JobService.UpdateJob(int.Parse(Id!), _addLocumJobDtoFormModel);
+            
+                SnackBar.Add("Job Updated!", Severity.Success);
             }
         }
         catch (Exception e)

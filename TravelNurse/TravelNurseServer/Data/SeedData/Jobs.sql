@@ -27,18 +27,6 @@ i INT := 1;
         'Flexible schedule and reliable.',
         'Background in pediatric care.'
         ];
-    platform_ids TEXT[] := ARRAY[
-        'PLAT1234',
-        'PLAT5678',
-        'PLAT9012',
-        'PLAT3456',
-        'PLAT7890',
-        'PLAT2345',
-        'PLAT6789',
-        'PLAT0123',
-        'PLAT4567',
-        'PLAT8901'
-        ];
     requirements_samples TEXT[] := ARRAY[
         'Must have valid RN license.',
         'Ability to lift 50 lbs frequently.',
@@ -56,7 +44,7 @@ BEGIN
             INSERT INTO "Jobs" (
                 "JobTitle",
                 "UniqueNotes",
-                "PlatformJobId",
+                "PlatformId",
                 "HousingProvided",
                 "HideExternally",
                 "ContractLengthWeeks",
@@ -66,37 +54,31 @@ BEGIN
                 "FacilityId",
                 "DisciplineId",
                 "SpecialtyId",
-                "IsFellowshipRequired",
                 "JobStrength",
                 "HideCity",
                 "AutoPosted",
                 "AllowsAutoposterUpdate",
                 "Requirements",
-                "IsNoContractInHandOnCreation",
-                "SyncToSense",
-                "LastSyncToSense"
+                "JobType"
             ) VALUES (
                          job_titles[(i - 1) % array_length(job_titles,1) + 1],
                          notes_samples[(i - 1) % array_length(notes_samples,1) + 1],
-                         platform_ids[(i - 1) % array_length(platform_ids,1) + 1],
+                         FLOOR(RANDOM() * 25 + 1)::int,
                          (random() < 0.5),
                          (random() < 0.5),
                          FLOOR(random() * 52 + 1)::int,
                          dt_now - (random() * INTERVAL '30 days'),
                          dt_now + (60 + FLOOR(random() * 60)) * INTERVAL '1 day',
                          dt_now - (random() * INTERVAL '15 days'),
-                         1 + FLOOR(random())::int, --facility Id
+                         1 + FLOOR(random())::int, --facility id
                          1 + FLOOR(random() * 10)::int,
                          1 + FLOOR(random() * 10)::int,
-                         (random() < 0.5),
                          round((random() * 10.0)::numeric, 2),
                          (random() < 0.5),
                          (random() < 0.5),
                          (random() < 0.5),
                          requirements_samples[(i - 1) % array_length(requirements_samples,1) + 1],
-                         (random() < 0.5),
-                         (random() < 0.5),
-                         dt_now - (random() * INTERVAL '30 days')
+                         FLOOR(RANDOM() * 3 + 1)::int
                      );
             i := i + 1;
 END LOOP;

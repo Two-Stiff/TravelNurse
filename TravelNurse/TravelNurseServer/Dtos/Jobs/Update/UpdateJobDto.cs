@@ -4,9 +4,9 @@ using Core.Attributes;
 using Core.Utils;
 using TravelNurseServer.Helpers;
 
-namespace TravelNurseServer.Dtos.Jobs.Add;
+namespace TravelNurseServer.Dtos.Jobs.Update;
 
-public class AddJobDto
+public class UpdateJobDto 
 {
     [Required][StringLength(1000)] public string JobTitle { get; set; } = Constants.DefaultString;
 
@@ -16,11 +16,10 @@ public class AddJobDto
 
     [Required][NotNull] public bool? AllowsAutoposterUpdate { get; set; } = Constants.DefaultBoolean;
 
-    [Required][NotNull] public bool? Active { get; set; } = Constants.DefaultBoolean;
-
     [Required][NotNull] public bool? HousingProvided { get; set; } = Constants.DefaultBoolean;
 
     [Required][NotNull] public bool? AutoPosted { get; set; } = Constants.DefaultBoolean;
+    
 
     [Required][NotNull] public bool? HideExternally { get; set; } = Constants.DefaultBoolean;
 

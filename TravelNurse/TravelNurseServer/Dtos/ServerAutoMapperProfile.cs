@@ -2,6 +2,7 @@ using AutoMapper;
 using TravelNurseServer.Dtos.Common.Get;
 using TravelNurseServer.Dtos.Jobs.Add;
 using TravelNurseServer.Dtos.Jobs.Get;
+using TravelNurseServer.Dtos.Jobs.Update;
 using TravelNurseServer.Dtos.Platforms.Get;
 using TravelNurseServer.Dtos.Providers.Get;
 using TravelNurseServer.Entities.Common;

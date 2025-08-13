@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using TravelNurse.Components;
+using TravelNurse.Components.Common;
 using TravelNurse.Components.Common.Services;
 using TravelNurse.Components.Common.Utils;
 using TravelNurse.Components.Src.ContextStore;
@@ -26,9 +27,12 @@ builder.Services.AddDbContextFactory<DataContext>(options =>
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-//
-//
+
+// Auto mapper
 builder.Services.AddAutoMapper(typeof(ServerAutoMapperProfile));
+builder.Services.AddAutoMapper(typeof(UiAutoMapperProfile));
+
+// Services
 builder.Services.ConfigureServices();
 
 // Context store

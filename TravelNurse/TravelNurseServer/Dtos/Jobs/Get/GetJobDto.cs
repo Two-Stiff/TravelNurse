@@ -22,9 +22,15 @@ public class GetJobDto : BaseGetDto
     
     public GetDisciplineDto? Discipline { get; set; }
     
+    public int SpecialtyId { get; set; }
+    
+    public GetSpecialtyDto? Specialty { get; set; }
+    
     public DateTime StartDate { get; set; }
     
     public DateTime ExpiresOn { get; set; }
     
     public int? PlatformId { get; set; }
+    
+    public int? FacilityId { get; set; }
 }

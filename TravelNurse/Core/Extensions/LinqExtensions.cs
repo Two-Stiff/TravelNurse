@@ -285,5 +285,21 @@ public static class LinqExtensions
         }
     }
     
+    public static async Task<bool> ExistAsync<T>(
+        this IQueryable<T> list,
+        int id,
+        NotFoundException? notFoundException = null
+    ) where T : Entity
+    {
+        var exist = await list.AnyAsync(x => x.Id == id);
+
+        if (!exist)
+        {
+            throw notFoundException ?? new NotFoundException<T>();
+        }
+
+        return exist;
+    }
+
     
 } 

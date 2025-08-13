@@ -17,9 +17,8 @@ public class Job : Entity
     public string? UniqueNotes { get; set; } = Constants.DefaultString;
 
     [MaxLength(100)]
-    public string? PlatformJobId { get; set; } = Constants.DefaultString;
-
-
+    public int? PlatformId { get; set; } = Constants.DefaultInt;
+    
     public bool Active
     {
         get { return ExpiresOn > DateTime.UtcNow; }

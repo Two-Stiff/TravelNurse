@@ -11,6 +11,8 @@ namespace TravelNurseServer.Services;
 public interface IFacilityService
 {
     Task<List<GetFacilityDto>> GetFacilities(string name);
+    
+    Task<GetFacilityDto> GetFacility(int id);
 }
 
 public class FacilityService: IFacilityService
@@ -26,6 +28,16 @@ public class FacilityService: IFacilityService
         _context = context;
         _mapper = mapper;
     }
+    
+    public async Task<GetFacilityDto> GetFacility(int id)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+        
+        var data = await context.Facilities.GetAsync(id);
+        var res = _mapper.Map<GetFacilityDto>(data);
+        return res;
+    }
+
     
     public async Task<List<GetFacilityDto>> GetFacilities(string text)
     {

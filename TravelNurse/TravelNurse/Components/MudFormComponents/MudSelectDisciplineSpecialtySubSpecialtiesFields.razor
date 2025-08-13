@@ -20,7 +20,7 @@ else
     <MudItem xs="@Xs" md="@Md">
         <MudSelect T="int"
                    Value="DisciplineValue"
-                   ValueChanged="OnDisciplineValueChanged"
+                   ValueChanged="@((v) => OnDisciplineValueChanged(v, false))"
                    For="DisciplineFor"
                    Immediate="true"
                    Label="Discipline"
@@ -111,6 +111,11 @@ else
     private bool _shouldDisableSubSpecialty = true;
 
 
+    protected override async Task OnInitializedAsync()
+    {
+        await OnDisciplineValueChanged(DisciplineValue, true);
+    }
+
     private List<SelectOption> _specialties = new()
     {
         new SelectOption
@@ -127,11 +132,14 @@ else
         }
     };
 
-    private async Task OnDisciplineValueChanged(int disciplineId)
+    private async Task OnDisciplineValueChanged(int disciplineId, bool? initialRender = false)
     {
         _specialties = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Specialties, disciplineId, null, true);
         await DisciplineValueChanged.InvokeAsync(disciplineId);
-        await SpecialtyValueChanged.InvokeAsync(-1);
+        if (initialRender == false)
+        {
+            await SpecialtyValueChanged.InvokeAsync(-1);   
+        }
         await DisplaySubSpecialtyChanged.InvokeAsync("");
         await UpdateSelectedSubSpecialties.InvokeAsync(new List<SelectOption>());
         _shouldDisableSubSpecialty = true;

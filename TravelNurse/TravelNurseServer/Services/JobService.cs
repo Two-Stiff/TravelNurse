@@ -1,12 +1,15 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using TravelNurseServer.Data;
 using TravelNurseServer.Dtos.DataGridDtos;
 using TravelNurseServer.Dtos.Jobs.Add;
 using TravelNurseServer.Dtos.Jobs.Get;
+using TravelNurseServer.Dtos.Jobs.Update;
 using TravelNurseServer.Dtos.TablePaginationParams;
 using TravelNurseServer.Entities.Jobs;
+using TravelNurseServer.Enums;
 using TravelNurseServer.Helpers;
 
 namespace TravelNurseServer.Services;
@@ -19,6 +22,10 @@ public interface IJobService
     Task<DataGridListItemDto<GetJobDto>> GetJobDataGrid<T>(GridDataRequestDto<T> state, List<DataGridFilterDto> filters);
     
     Task<List<GetJobDto>> GetJobs();
+    
+    Task<GetJobDto> GetJob(int id);
+
+    Task UpdateJob(int id, AddJobDto addJobDto);
 }
 
 
@@ -34,6 +41,15 @@ public class JobService : IJobService
     {
         _context = context;
         _mapper = mapper;
+    }
+
+    public async Task<GetJobDto> GetJob(int id)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+        
+        var data = await context.Jobs.GetAsync(id);
+        var res = _mapper.Map<GetJobDto>(data);
+        return res;
     }
     
     public async Task<List<GetJobDto>> GetJobs()
@@ -112,6 +128,36 @@ public class JobService : IJobService
         var data = _mapper.Map<List<JobSubSpecialty>>(subSpecialties);
 
         await context.JobSubSpecialties.AddRangeAsync(data);
+        await context.SaveChangesAsync();
+
+    }
+
+    public async Task UpdateJob(int id, AddJobDto addJobDto)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+        var job = await context.Jobs
+            .Include(x => x.JobSubSpecialties)
+            .GetAsync(id);
+        
+        addJobDto.StartDate = job.StartDate.ToUtcSafe();
+        addJobDto.ExpiresOn = job.ExpiresOn.ToUtcSafe();
+        
+        job.JobTitle = addJobDto.JobTitle;
+        job.StartDate = addJobDto.StartDate.Value.ToUtcSafe();
+        job.ExpiresOn = addJobDto.ExpiresOn.Value.ToUtcSafe();
+        job.UniqueNotes = addJobDto.UniqueNotes;
+        job.FacilityId = addJobDto.FacilityId;
+        job.DisciplineId = addJobDto.DisciplineId;
+        job.SpecialtyId = addJobDto.SpecialtyId;
+        job.JobType = (JobType)addJobDto.JobType;
+        job.HideCity = addJobDto.HideCity.Value;
+        job.AllowsAutoposterUpdate = addJobDto.AllowsAutoposterUpdate.Value;
+        job.HousingProvided = addJobDto.HousingProvided.Value;
+        job.AutoPosted = addJobDto.AutoPosted.Value;
+        job.HideExternally = addJobDto.HideExternally.Value;
+        job.PlatformId = addJobDto.PlatformId;
+        job.ContractLengthWeeks = addJobDto.ContractLengthWeeks.Value;
+        
         await context.SaveChangesAsync();
 
     }
