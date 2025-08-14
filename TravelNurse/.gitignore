@@ -59,3 +59,9 @@ project.fragment.lock.json
 # ReSharper and Rider settings
 _ReSharper*/
 *.DotSettings.user
+
+TravelNurseServer/appsettings.json
+TravelNurseServer/appsettings.*.json
+
+TravelNurse/appsettings.json
+TravelNurse/appsettings.*.json
