@@ -4,6 +4,7 @@
 @using TravelNurseServer.Enums
 @using TravelNurseServer.Services
 @inject IProviderService ProviderService;
+@implements IDisposable
 <MudGrid Style="display: flex; justify-content: center; align-items: center;">
     
     <MudItem xs="12" md="4" Style="width: 100%;">
@@ -53,5 +54,19 @@
     [CascadingParameter] 
     public ProviderProfileStore ProviderProfileStore { get; set; } = new();
 
+    protected override void OnInitialized()
+    {
+        ProviderProfileStore.StateChanged += OnStateChanged;
+    }
+    
+    private void OnStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    public void Dispose()
+    {
+        ProviderProfileStore.StateChanged -= OnStateChanged;
+    }
 
 }
