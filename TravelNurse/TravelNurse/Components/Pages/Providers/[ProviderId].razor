@@ -1,0 +1,22 @@
+@page "/provider/{ProviderId:int}"
+@using TravelNurse.Components.Common.Enums.Tabs
+@using TravelNurse.Components.Common.Utils.Dtos
+@using TravelNurse.Components.Layout
+@using TravelNurse.Components.Src.Providers.Dashboard
+@using TravelNurse.Components.Src.Common
+@using TravelNurseServer.Services
+@using TravelNurse.Components.Src.Providers
+@rendermode InteractiveServer
+@inject ProviderProfileStore ProviderProfileStore
+@inject ISnackbar SnackBar
+@inject IProviderService ProviderService
+<Wrapper>
+    <CascadingValue Value="ProviderProfileStore">
+        <ProviderProfile ProviderId="ProviderId" />
+    </CascadingValue>
+</Wrapper>
+
+@code {
+    [Parameter]
+    public int ProviderId { get; set; }
+}

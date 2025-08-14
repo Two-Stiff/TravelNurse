@@ -1,0 +1,169 @@
+@using AutoMapper
+@using TravelNurse.Components.Common.Enums
+@using TravelNurse.Components.Common.Services
+@using TravelNurseServer.Helpers
+@using TravelNurse.Components.MudFormComponents
+@using TravelNurse.Components.Pages.Providers
+@using TravelNurseServer.Dtos.Providers.Update
+@using TravelNurseServer.Services
+@inject ISnackbar SnackBar
+@inject IDataFetchService DataFetchService
+@inject IMapper Mapper
+@inject IProviderService ProviderService
+@implements IDisposable
+
+<MudCard>
+    <MudForm
+        Model="@_updateProviderGeneralInformationFormModel"
+        @ref="@_form"
+        ValidationDelay="0"
+    >
+
+        <MudCardContent>
+            <MudGrid>
+                <MudItemDatePickerField
+                    T="DateTime?"
+                    Value="@_updateProviderGeneralInformationFormModel.AvailabilityDate"
+                    ValueChanged="@(v => _updateProviderGeneralInformationFormModel.AvailabilityDate = v)"
+                    For="@(() => _updateProviderGeneralInformationFormModel.AvailabilityDate)"
+                    Label="Availability Date"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Xs="6" Md="4"/>
+                
+                <MudItemTextField T="string"
+                                  Value="@_updateProviderGeneralInformationFormModel.PrimaryPhoneNumber"
+                                  ValueChanged="@(v => _updateProviderGeneralInformationFormModel.PrimaryPhoneNumber = v)"
+                                  For="@(() => _updateProviderGeneralInformationFormModel.PrimaryPhoneNumber)"
+                                  Label="Phone Number"
+                                  IsFormDependencyLoading="_isLoadingAllDependencies"
+                                  Xs="6" Md="4"/>
+
+                <MudItemTextField T="string"
+                                  Value="@_updateProviderGeneralInformationFormModel.Email"
+                                  ValueChanged="@(v => _updateProviderGeneralInformationFormModel.Email = v)"
+                                  For="@(() => _updateProviderGeneralInformationFormModel.Email)"
+                                  Label="Email"
+                                  IsFormDependencyLoading="_isLoadingAllDependencies"
+                                  Xs="6" Md="4"/>
+
+                <MudItemTextField T="string"
+                                  Value="@_updateProviderGeneralInformationFormModel.StreetAddress"
+                                  ValueChanged="@(v => _updateProviderGeneralInformationFormModel.StreetAddress = v)"
+                                  For="@(() => _updateProviderGeneralInformationFormModel.StreetAddress)"
+                                  Label="Street Address"
+                                  IsFormDependencyLoading="_isLoadingAllDependencies"
+                                  Xs="6" Md="4"/>
+
+                <MudItemTextField T="string"
+                                  Value="@_updateProviderGeneralInformationFormModel.City"
+                                  ValueChanged="@(v => _updateProviderGeneralInformationFormModel.City = v)"
+                                  For="@(() => _updateProviderGeneralInformationFormModel.City)"
+                                  Label="City"
+                                  IsFormDependencyLoading="_isLoadingAllDependencies"
+                                  Xs="6" Md="4"/>
+
+                <MudItemTextField T="string"
+                                  Value="@_updateProviderGeneralInformationFormModel.ZipCode"
+                                  ValueChanged="@(v => _updateProviderGeneralInformationFormModel.ZipCode = v)"
+                                  For="@(() => _updateProviderGeneralInformationFormModel.ZipCode)"
+                                  Label="Zip Code"
+                                  IsFormDependencyLoading="_isLoadingAllDependencies"
+                                  Xs="6" Md="4"/>
+
+                <MudSelectDisciplineSpecialtySubSpecialtiesFields
+                    T="int"
+                    DisciplineValue="@_updateProviderGeneralInformationFormModel.DisciplineId"
+                    DisciplineValueChanged="@(v => _updateProviderGeneralInformationFormModel.DisciplineId = v)"
+                    DisciplineFor="@(() => _updateProviderGeneralInformationFormModel.DisciplineId)"
+                    DisciplineOptions="_disciplines"
+
+                    SpecialtyValue="@_updateProviderGeneralInformationFormModel.SpecialtyId"
+                    SpecialtyValueChanged="@(v => _updateProviderGeneralInformationFormModel.SpecialtyId = v)"
+                    SpecialtyFor="@(() => _updateProviderGeneralInformationFormModel.SpecialtyId)"
+
+                    DisplaySubSpecialty="@_updateProviderGeneralInformationFormModel.SubSpecialtyNames"
+                    DisplaySubSpecialtyChanged="@(v => _updateProviderGeneralInformationFormModel.SubSpecialtyNames = v)"
+                    DisplaySubSpecialtyFor="@(() => _updateProviderGeneralInformationFormModel.SubSpecialtyNames)"
+
+                    UpdateSelectedSubSpecialties="@(v => _updateProviderGeneralInformationFormModel.SelectedSubSpecialties = v)"
+                    HideSubSpecialties="true"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Xs="6" Md="4"/>
+            </MudGrid>
+
+            <MudStack
+                Style="justify-content: center; align-items: center; margin-top: 2rem;"
+            >
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+
+                           OnClick="@(async () => await Submit())">
+                    Save General Information
+                </MudButton>
+            </MudStack>
+        </MudCardContent>
+    </MudForm>
+</MudCard>
+
+
+@code {
+    
+    [CascadingParameter] 
+    public ProviderProfileStore ProviderProfileStore { get; set; } = new();
+    
+    MudForm _form = new();
+    
+    UpdateProviderGeneralInformationDto _updateProviderGeneralInformationFormModel = new();
+
+    // GeneralInformationFormFluentValidator _generalInformationFormFluentValidator = new();
+    
+    private List<SelectOption> _disciplines = new();
+    
+    private bool _isLoadingAllDependencies = true;
+    
+    protected override void OnInitialized()
+    {
+        ProviderProfileStore.StateChanged += OnProfileChanged;
+        _updateProviderGeneralInformationFormModel = Mapper.Map<UpdateProviderGeneralInformationDto>(ProviderProfileStore.Provider);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _disciplines = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Disciplines, null, null, true);
+            _isLoadingAllDependencies = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                SnackBar.Add("Information Updated!", Severity.Success);
+                var result = await ProviderService.UpdateProvider(
+                    ProviderProfileStore.Provider!.Id,
+                    _updateProviderGeneralInformationFormModel);
+                ProviderProfileStore.SetProvider(result);
+            }
+        }
+        catch (Exception e)
+        {
+            SnackBar.Add(e.Message, Severity.Error);
+        }
+    }
+    
+    private void OnProfileChanged()
+    {
+        InvokeAsync(StateHasChanged); // Ensures UI updates safely
+    }
+
+    
+    public void Dispose()
+    {
+        ProviderProfileStore.StateChanged -= OnProfileChanged;
+    }
+}

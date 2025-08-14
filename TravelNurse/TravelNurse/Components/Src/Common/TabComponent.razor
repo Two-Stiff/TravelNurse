@@ -1,0 +1,30 @@
+@using System.Text.RegularExpressions
+@using TravelNurse.Components.Common.Utils
+@using TravelNurse.Components.Common.Utils.Dtos
+<MudTabs Elevation="1" Rounded="true"
+         ActiveTabClass="border-solid border-2 mud-border-primary"
+         @bind-ActivePanelIndex="ActiveTab"
+         Style="margin-top: 30px; width: 100%; "
+>
+    @foreach (var (index, tab) in TabList.Select((tab, index) => (index, tab)))
+    {
+        <MudTabPanel>
+            <TabContent>
+                @CommonHelpers.SplitCamelCase(tab.Name)
+            </TabContent>
+            <ChildContent>
+                <DynamicComponent Type="@tab.Component" Parameters="@tab.Parameters" /> 
+            </ChildContent>
+        </MudTabPanel>
+    }
+   
+</MudTabs>
+
+@code {
+    
+    [Parameter] 
+    public List<TabComponentDto> TabList { get; set; } = new List<TabComponentDto>();
+
+    [Parameter] public int ActiveTab { get; set; } = 0;
+    
+}

@@ -1,6 +1,7 @@
 using Core.Dto;
 using Core.Utils;
 using TravelNurseServer.Dtos.Common.Get;
+using TravelNurseServer.Enums;
 
 namespace TravelNurseServer.Dtos.Providers.Get;
 
@@ -79,6 +80,8 @@ public class GetProviderDto : BaseGetDto
     public int SpecialtyId { get; set; }
     
     public GetSpecialtyDto? Specialty { get; set; }
+    
+    public ProviderStatus? Status { get; set; }
 
     public List<GetSubSpecialtyDto>? SubSpecialties { get; set; } = new List<GetSubSpecialtyDto>();
     

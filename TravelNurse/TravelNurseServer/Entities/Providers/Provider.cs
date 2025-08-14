@@ -4,6 +4,7 @@ using Core;
 using Core.Utils;
 using Microsoft.EntityFrameworkCore;
 using TravelNurseServer.Entities.Common;
+using TravelNurseServer.Enums;
 
 namespace TravelNurseServer.Entities.Providers;
 
@@ -66,42 +67,20 @@ public class Provider : Entity
 
     [MaxLength(200)]
     public string ZipCode { get; set; } = Constants.DefaultString;
-
-    [MaxLength(1000)]
-    public string TemporaryStreetAddress { get; set; } = Constants.DefaultString;
-
-    [MaxLength(200)]
-    public string TemporaryCity { get; set; } = Constants.DefaultString;
-
-    public int? TemporaryStateId { get; set; } //FK
-
-    public State? TemporaryState { get; set; }
-
-    [MaxLength(200)]
-    public string TemporaryZipCode { get; set; } = Constants.DefaultString;
-
+    
     public DateTime AvailabilityDate { get; set; } = Constants.DefaultDateTime;
-    
-    [MaxLength(2000)]
-    public string ReferredBy { get; set; } = Constants.DefaultString;
-
-    public DateTime ReferralDate { get; set; } = Constants.DefaultDateTime;
-    
-    public DateTime SensitiveDataModifiedOn { get; set; } = Constants.DefaultDateTime; 
-    
-    public bool ForceNextLogout { get; set; } = Constants.DefaultBoolean;
-    
-    public int? TravelerId { get; set; }
-    
-    public int? LastRecruiterId { get; set; } //FK
-    
     
     public int? DisciplineId { get; set; } //FK
 
     public Discipline? Discipline { get; set; }
     
+    public int? SpecialtyId { get; set; } //FK
+
+    public Specialty? Specialty { get; set; } 
+    
     public bool IsPriority { get; set; } = Constants.DefaultBoolean;
 
+    public ProviderStatus? Status { get; set; }
     // Suppose that I have this property in my entity class
     // Is there a way to build out the expression like x => (x.FirstName + " " x.LastName).Contains("i")
     [NotMapped]

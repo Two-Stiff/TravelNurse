@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TravelNurseServer.Data;
 using TravelNurseServer.Dtos.DataGridDtos;
 using TravelNurseServer.Dtos.Providers.Get;
+using TravelNurseServer.Dtos.Providers.Update;
 using TravelNurseServer.Dtos.TablePaginationParams;
 using TravelNurseServer.Entities.Providers;
 using TravelNurseServer.Helpers;
@@ -18,6 +19,8 @@ public interface IProviderService
     
     Task<DataGridListItemDto<GetProviderDto>> GetProviderDataGrid<T>(GridDataRequestDto<T> state, List<DataGridFilterDto> filters);
 
+    Task<GetProviderDto> UpdateProvider(int id, UpdateProviderGeneralInformationDto updateProviderGeneralInformationDto);
+    
 }
 
 public class ProviderService : IProviderService
@@ -37,7 +40,10 @@ public class ProviderService : IProviderService
     public async Task<GetProviderDto> GetProviderById(int id)
     {
         await using var context = await _context.CreateDbContextAsync();
-        var provider = await context.Providers.GetAsync(id);
+        var provider = await context.Providers
+            .Include(x => x.Discipline)
+            .Include(x => x.Specialty)
+            .GetAsync(id);
         var res = _mapper.Map<GetProviderDto>(provider);
         return res;
     }
@@ -81,5 +87,36 @@ public class ProviderService : IProviderService
             ItemTotalCount = providerCount
         };
     }
-    
+
+    public async Task<GetProviderDto> UpdateProvider(int id, UpdateProviderGeneralInformationDto updateProviderGeneralInformationDto)
+    {
+        await using var context = await _context.CreateDbContextAsync();
+        var provider = await context.Providers
+            .Include(x => x.Discipline)
+            .Include(x => x.Specialty)
+            .GetAsync(id);
+        
+        provider.PrimaryPhoneNumber = updateProviderGeneralInformationDto.PrimaryPhoneNumber;
+        provider.Email = updateProviderGeneralInformationDto.Email;
+        provider.StreetAddress = updateProviderGeneralInformationDto.StreetAddress;
+        provider.City = updateProviderGeneralInformationDto.City;
+        provider.ZipCode = updateProviderGeneralInformationDto.ZipCode;
+        provider.DisciplineId = updateProviderGeneralInformationDto.DisciplineId;
+        provider.SpecialtyId   = updateProviderGeneralInformationDto.SpecialtyId;
+        
+        if (updateProviderGeneralInformationDto.AvailabilityDate.HasValue)
+        {
+            provider.AvailabilityDate = updateProviderGeneralInformationDto.AvailabilityDate.Value;
+        }
+        
+        
+        await context.SaveChangesAsync();
+        
+        var specialty = await context.Specialties.GetAsync(updateProviderGeneralInformationDto.SpecialtyId);
+        var discipline = await context.Disciplines.GetAsync(updateProviderGeneralInformationDto.DisciplineId);
+        provider.Discipline = discipline;
+        provider.Specialty = specialty;
+        var mappedResult = _mapper.Map<GetProviderDto>(provider);
+        return mappedResult;
+    }
 }

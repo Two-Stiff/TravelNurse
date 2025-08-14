@@ -1,0 +1,37 @@
+@using TravelNurse.Components.Pages.Providers
+@using TravelNurse.Components.Src.Providers.ApplicationWizard
+
+<MudPaper Style="width: 100%; margin-top: 30px; ">
+    <MudStepper Vertical NonLinear ShowResetButton="false"
+    >
+        <ChildContent >
+            @* TODO: Update these Completed states later *@
+            <MudStep Completed="false" Title="Provider General Information">
+                <GeneralInformation />
+            </MudStep>
+            <MudStep Completed="false" com Title="Proof - Credentials">
+                <ProofOfCertification />
+            </MudStep>
+            <MudStep Completed="false" Title="Create an ad">
+                Try out different ad text to see what brings in the most customers, and learn how to enhance your ads using features like ad extensions. If you run into any problems with your ads, find out how to tell if they're running and how to resolve approval issues.
+            </MudStep>
+        </ChildContent>
+        
+        @* <CompletedContent> *@
+        @*     Thank you for wasting your money on clicks! *@
+        @* </CompletedContent> *@
+        
+    </MudStepper>
+    
+</MudPaper>
+
+<style>
+    .mud-stepper-actions {
+        display: none !important;
+    }
+</style>
+
+@code {
+    [CascadingParameter] 
+    public ProviderProfileStore ProviderProfileStore { get; set; } = new();
+}

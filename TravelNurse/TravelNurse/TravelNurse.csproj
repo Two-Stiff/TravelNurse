@@ -26,6 +26,9 @@
       <Compile Update="Components\Src\Tables\JobTableStore.cs">
         <DependentUpon>JobsTable.razor</DependentUpon>
       </Compile>
+      <Compile Update="Components\Pages\Providers\ProviderProfileStore.cs">
+        <DependentUpon>[ProviderId].razor</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

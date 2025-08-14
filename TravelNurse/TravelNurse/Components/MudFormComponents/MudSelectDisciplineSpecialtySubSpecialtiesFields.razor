@@ -47,25 +47,28 @@ else
         </MudSelect>
     </MudItem>
     
-    <MudItem xs="@Xs" md="@Md">
-        <MudSelect T="string"
-                   MultiSelection="true"
-                   AnchorOrigin="Origin.BottomCenter"
-                   SelectedValues="@(string.IsNullOrWhiteSpace(DisplaySubSpecialty)
-                                       ? new List<string>()
-                                       : DisplaySubSpecialty.Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList())"
-                   SelectedValuesChanged="@(x => HandleSelectedValuesChanged(x))"
-                   For="DisplaySubSpecialtyFor"
-                   Immediate="true"
-                   Label="Sub-Specialties"
-                   Disabled="_shouldDisableSubSpecialty"
-        >
-            @foreach (var option in _subSpecialties)
-            {
-                <MudSelectItem T="string" Value="@option.Name">@option.Name</MudSelectItem>
-            }
-        </MudSelect>
-    </MudItem>
+    @if (HideSubSpecialties == false)
+    {
+        <MudItem xs="@Xs" md="@Md">
+            <MudSelect T="string"
+                       MultiSelection="true"
+                       AnchorOrigin="Origin.BottomCenter"
+                       SelectedValues="@(string.IsNullOrWhiteSpace(DisplaySubSpecialty)
+                                           ? new List<string>()
+                                           : DisplaySubSpecialty.Split(',').Where(x => !string.IsNullOrWhiteSpace(x)).ToList())"
+                       SelectedValuesChanged="@(x => HandleSelectedValuesChanged(x))"
+                       For="DisplaySubSpecialtyFor"
+                       Immediate="true"
+                       Label="Sub-Specialties"
+                       Disabled="_shouldDisableSubSpecialty"
+            >
+                @foreach (var option in _subSpecialties)
+                {
+                    <MudSelectItem T="string" Value="@option.Name">@option.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+    }
 }
 
 
@@ -106,6 +109,9 @@ else
 
     [Parameter] public int Md { get; set; } = 6;
     
+    [Parameter]
+    public bool? HideSubSpecialties { get; set; } = Constants.DefaultBoolean;
+    
     [Parameter] public EventCallback<List<SelectOption>> UpdateSelectedSubSpecialties { get; set; }
 
     private bool _shouldDisableSubSpecialty = true;
@@ -134,7 +140,7 @@ else
 
     private async Task OnDisciplineValueChanged(int disciplineId, bool? initialRender = false)
     {
-        _specialties = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Specialties, disciplineId, null, false);
+        _specialties = await DataFetchService.GetLocumSelectOptions(DataFetchEnum.Specialties, disciplineId, null, true);
         await DisciplineValueChanged.InvokeAsync(disciplineId);
         if (initialRender == false)
         {

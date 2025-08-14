@@ -1,0 +1,113 @@
+@using TravelNurse.Components.Common.Enums.Tabs
+@using TravelNurse.Components.Common.Utils.Dtos
+@using TravelNurse.Components.Layout
+@using TravelNurse.Components.Pages.Providers
+@using TravelNurse.Components.Src.Providers.Dashboard
+@using TravelNurse.Components.Src.Common
+@using TravelNurseServer.Services
+@rendermode InteractiveServer
+@inject ISnackbar SnackBar
+@inject IProviderService ProviderService
+
+<div style="width:@_width; min-width: 90vw;">
+    <ProviderProfileHeader />
+
+    <MudGrid>
+        <MudItem xs="12" md="@(_openProfessionDrawer ? 3 : 1)">
+            <SidebarInfo
+                OpenProfessionDrawer="_openProfessionDrawer"
+                SetOpenProfessionDrawer="@(v => _openProfessionDrawer = v)"/>
+        </MudItem>
+
+        <MudItem xs="12" md="@(_openProfessionDrawer ? 9 : 11)">
+            <TabComponent TabList="_tabList" ActiveTab="1"/>
+        </MudItem>
+    </MudGrid>
+
+</div>
+
+@code {
+    [CascadingParameter] 
+    public ProviderProfileStore ProviderProfileStore { get; set; } = new();
+    
+    [Parameter]
+    public int ProviderId { get; set; }
+
+    private bool _openProfessionDrawer;
+
+    private List<TabComponentDto> _tabList = new()
+    {
+        new TabComponentDto()
+        {
+            Name = ProviderProfileTabs.MatchingJobs.ToString(),
+            Component = typeof(TestPage),
+            Parameters = new Dictionary<string, object>()
+            {
+                { "Msg", ProviderProfileTabs.MatchingJobs.ToString() }
+            }
+        },
+        new TabComponentDto()
+        {
+            Name = ProviderProfileTabs.Application.ToString(),
+            Component = typeof(Dashboard.ApplicationWizard)
+        }
+    };
+
+    private string _width = "";
+    private bool _firstSet = true;
+    
+    private void BreakpointChanged(Breakpoint breakpoint)
+    {
+        switch (breakpoint)
+        {
+            case Breakpoint.Xl:
+                _openProfessionDrawer = false;
+                break;
+            case Breakpoint.Lg:
+                _openProfessionDrawer = false;
+                break;
+            case Breakpoint.Md:
+                _width = "85vw";
+                _openProfessionDrawer = false;
+                break;
+            case Breakpoint.Sm:
+                _width = "80vw";
+                _openProfessionDrawer = true;
+                break;
+            case Breakpoint.Xs:
+                _width = "75vw";
+                _openProfessionDrawer = true;
+                break;
+                
+        }
+        
+    }
+    
+    private async Task GetProvider()
+    {
+        try
+        {
+            var result = await ProviderService.GetProviderById(ProviderId);
+            ProviderProfileStore.SetProvider(result);
+        }
+        catch (Exception e)
+        {
+            SnackBar.Add("Job Not Found", Severity.Error);
+        }
+    }
+    
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        // This will run before OnInitialized gets kicked off and way before the component renders
+        parameters.SetParameterProperties(this);
+        
+        if (_firstSet)
+        {
+            await GetProvider();
+        }
+        _firstSet = false;
+        await base.SetParametersAsync(ParameterView.Empty);
+    }
+
+
+}

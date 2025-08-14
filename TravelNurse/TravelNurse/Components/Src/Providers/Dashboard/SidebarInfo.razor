@@ -1,0 +1,133 @@
+@using TravelNurse.Components.Pages.Providers
+@implements IDisposable
+
+<MudBreakpointProvider OnBreakpointChanged="BreakpointChanged"/>
+
+<MudPaper Elevation="@(OpenProfessionDrawer ? 2 : 0)"
+          Style="overflow:hidden; position:relative; margin-top: 2rem; z-index: 10;">
+    <MudDrawerContainer Style="max-height: 400px; min-height: 300px;
+    justify-content: center; align-items: center; border-radius: 30px;
+">
+        <MudDrawer @bind-Open="@OpenProfessionDrawer"
+                   Anchor="Anchor.Start" Elevation="0" Variant="@DrawerVariant.Persistent"
+                   Style=" width: 100%; "
+        >
+            <MudDrawerHeader Style="display: flex; justify-content: flex-start; align-items: center; padding-left: 2rem;">
+                <MudText Typo="Typo.h6">Provider Info</MudText>
+                @if (DisplayDrawerButton)
+                {
+                    <MudButton Color="Color.Inherit"
+                               OnClick="@ToggleStartDrawer"
+                               StartIcon="@(Icons.Material.TwoTone.East)" Class="mx-2">
+                    </MudButton>
+                }
+            </MudDrawerHeader>
+            
+            <MudStack Justify="Justify.FlexStart" AlignItems="AlignItems.Start" Spacing="2" Style="padding-left: 2rem;">
+                <MudText Typo="Typo.body1">
+                    Available Date: @ProviderProfileStore.Provider?.AvailabilityDate.ToString("MM/dd/yyyy")
+                </MudText>
+                
+                <MudStack Row Justify="Justify.FlexStart" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.body1">
+                        Discipline: 
+                    </MudText>
+                    @if (ProviderProfileStore.Provider?.Discipline != null)
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Secondary">
+                            @ProviderProfileStore.Provider?.Discipline?.Name
+                        </MudChip>
+                    }
+                </MudStack>
+
+                <MudStack Row Justify="Justify.FlexStart" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.body1">
+                        Specialties: 
+                    </MudText>
+                    @if (ProviderProfileStore.Provider?.Specialty != null)
+                    {
+                    <MudChip T="string" Size="Size.Small" Color="Color.Secondary">
+                        @ProviderProfileStore.Provider?.Specialty?.Name
+                    </MudChip>
+                    }
+                </MudStack>
+                
+            </MudStack>
+        </MudDrawer>
+        
+        <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Style="height: 100px;">
+            @if (DisplayDrawerButton)
+            {
+                <MudIconButton Icon="@Icons.Material.TwoTone.Delete"
+                               OnClick="@ToggleStartDrawer"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Medium" />
+            }
+        </MudStack>
+    </MudDrawerContainer>
+</MudPaper>
+
+@code
+{
+    [CascadingParameter] 
+    public ProviderProfileStore ProviderProfileStore { get; set; } = new();
+    
+    [Parameter]
+    public bool OpenProfessionDrawer { get; set; } = false;
+    
+    [Parameter] 
+    public EventCallback<bool> SetOpenProfessionDrawer { get; set; }
+    
+    
+    [CascadingParameter]
+    public bool Rtl { get; set; }
+
+    bool DisplayDrawerButton { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        ProviderProfileStore.StateChanged += OnStateChanged;
+    }
+    
+    private void OnStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    public void Dispose()
+    {
+        ProviderProfileStore.StateChanged -= OnStateChanged;
+    }
+    
+    private void ToggleStartDrawer()
+    {
+        SetOpenProfessionDrawer.InvokeAsync(!OpenProfessionDrawer);
+    }
+    
+    
+    private void BreakpointChanged(Breakpoint breakpoint)
+    {
+        switch (breakpoint)
+        {
+            case Breakpoint.Xl:
+                DisplayDrawerButton = true;
+                break;
+            case Breakpoint.Lg:
+                DisplayDrawerButton = true; 
+                break;
+            case Breakpoint.Md:
+                DisplayDrawerButton = true;
+                break;
+            case Breakpoint.Sm:
+                DisplayDrawerButton = false;
+                break;
+            case Breakpoint.Xs:
+                DisplayDrawerButton = false;
+                break;
+                
+        }
+        
+    }
+
+}

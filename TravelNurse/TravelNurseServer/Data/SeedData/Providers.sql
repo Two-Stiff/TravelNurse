@@ -32,6 +32,11 @@ FROM "Disciplines"
 ORDER BY random()
     LIMIT 1;
 
+SELECT "Id" INTO s_id
+FROM "Specialties"
+ORDER BY random()
+    LIMIT 1;
+
 INSERT INTO "Providers" (
     "PreferredFirstName",
     "FirstName",
@@ -53,19 +58,11 @@ INSERT INTO "Providers" (
     "City",
     "StateId",
     "ZipCode",
-    "TemporaryStreetAddress",
-    "TemporaryCity",
-    "TemporaryStateId",
-    "TemporaryZipCode",
     "AvailabilityDate",
-    "ReferredBy",
-    "ReferralDate",
-    "SensitiveDataModifiedOn",
-    "ForceNextLogout",
-    "TravelerId",
-    "LastRecruiterId",
     "DisciplineId",
-    "IsPriority"
+    "SpecialtyId",
+    "IsPriority", 
+    "Status"
 )
 VALUES (
            fname,
@@ -88,19 +85,11 @@ VALUES (
            city,
            NULL,
            'ZIP' || LPAD(i::text, 5, '0'),
-           street || ' Temp',
-           city || 'Temp',
-           NULL,
-           'TZIP' || LPAD(i::text, 5, '0'),
            NOW() + (random() * 30) * INTERVAL '1 day',
-           referral,
-           NOW() - (random() * 30) * INTERVAL '1 day',
-           NOW(),
-           FALSE,
-           NULL,
-           NULL,
            d_id,
-           (random() > 0.5)
+           s_id,
+           TRUE,
+           FLOOR(RANDOM() * 3 + 1)::int
        );
 
 i := i + 1;

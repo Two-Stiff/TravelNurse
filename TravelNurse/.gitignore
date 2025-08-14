@@ -65,3 +65,10 @@ TravelNurseServer/appsettings.*.json
 
 TravelNurse/appsettings.json
 TravelNurse/appsettings.*.json
+
+.DS_Store
+TravelNurse/.DS_Store
+TravelNurseServer/.DS_Store
+TravelNurseServer/Data/.DS_Store
+TravelNurseServer/Data/Scripts/.DS_Store
+TravelNurseServer/Data/Switched Over To Mac/.DS_Store

@@ -1,0 +1,179 @@
+@using TravelNurse.Components.Common.DummyData
+@using TravelNurse.Components.Common.Services
+@using TravelNurseServer.Dtos.Providers.Add
+@using TravelNurseServer.Helpers
+@using TravelNurseServer.Services
+@using TravelNurse.Components.MudFormComponents
+@inject ISnackbar SnackBar
+@inject IDisciplineService DisciplineService
+@inject IDataFetchService DataFetchService
+
+<MudCard>
+    <MudForm
+        Model="@_addProviderCredentialDtoFormModel"
+        @ref="@_form"
+        ValidationDelay="0">
+
+        <MudCardContent>
+            <MudGrid>
+                <MudMultiSelectField
+                    T="string"
+                    Options="_stateLicenses"
+                    DisplayValue="@_addProviderCredentialDtoFormModel.StateLicenseNames"
+                    DisplayValueChanged="@(v => _addProviderCredentialDtoFormModel.StateLicenseNames = v)"
+                    DisplayFor="@(() => _addProviderCredentialDtoFormModel.StateLicenseNames)"
+                    IdList="_addProviderCredentialDtoFormModel.StateLicenseIds"
+                    IdListValueChanged="@(v => _addProviderCredentialDtoFormModel.StateLicenseIds = v)"
+                    IdListFor="@(() => _addProviderCredentialDtoFormModel.StateLicenseIds)"
+                    Label="State Licenses"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Xs="10" Md="10"
+                />
+
+                <MudItemCheckBoxField
+                    T="bool"
+                    Value="@_addProviderCredentialDtoFormModel.Compact"
+                    ValueChanged="@(v => _addProviderCredentialDtoFormModel.Compact = v)"
+                    For="@(() => _addProviderCredentialDtoFormModel.Compact)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="IMLC/RN Compact"
+                    Xs="2"
+                    Md="2"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+
+                <MudMultiSelectField
+                    T="string"
+                    Options="_boards"
+                    DisplayValue="@_addProviderCredentialDtoFormModel.BoardNames"
+                    DisplayValueChanged="@(v => _addProviderCredentialDtoFormModel.BoardNames = v)"
+                    DisplayFor="@(() => _addProviderCredentialDtoFormModel.BoardNames)"
+                    IdList="_addProviderCredentialDtoFormModel.BoardIds"
+                    IdListValueChanged="@(v => _addProviderCredentialDtoFormModel.BoardIds = v)"
+                    IdListFor="@(() => _addProviderCredentialDtoFormModel.BoardIds)"
+                    Label="Boards"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Xs="10" Md="10"/>
+
+                <MudItemCheckBoxField
+                    T="bool"
+                    Value="@_addProviderCredentialDtoFormModel.IsDeaTransfer"
+                    ValueChanged="@(v => _addProviderCredentialDtoFormModel.IsDeaTransfer = v)"
+                    For="@(() => _addProviderCredentialDtoFormModel.IsDeaTransfer)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="DEA Transfer"
+                    Xs="2"
+                    Md="2"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+                
+                <MudMultiSelectField
+                    T="string"
+                    Options="_certification"
+                    DisplayValue="@_addProviderCredentialDtoFormModel.CertificationNames"
+                    DisplayValueChanged="@(v => _addProviderCredentialDtoFormModel.CertificationNames = v)"
+                    DisplayFor="@(() => _addProviderCredentialDtoFormModel.CertificationNames)"
+                    IdList="_addProviderCredentialDtoFormModel.CertificationIds"
+                    IdListValueChanged="@(v => _addProviderCredentialDtoFormModel.CertificationIds = v)"
+                    IdListFor="@(() => _addProviderCredentialDtoFormModel.CertificationIds)"
+                    Label="Certifications"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Xs="12" Md="12"/>
+
+                <MudItemCheckBoxField
+                    T="bool"
+                    Value="@_addProviderCredentialDtoFormModel.IsDeaApply"
+                    ValueChanged="@(v => _addProviderCredentialDtoFormModel.IsDeaApply = v)"
+                    For="@(() => _addProviderCredentialDtoFormModel.IsDeaApply)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="DEA Apply"
+                    Xs="4"
+                    Md="4"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+                <MudItemCheckBoxField
+                    T="bool"
+                    Value="@_addProviderCredentialDtoFormModel.BoardEligible"
+                    ValueChanged="@(v => _addProviderCredentialDtoFormModel.BoardEligible = v)"
+                    For="@(() => _addProviderCredentialDtoFormModel.BoardEligible)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Board Eligible"
+                    Xs="4"
+                    Md="4"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+                
+
+                <MudItemCheckBoxField
+                    T="bool"
+                    Value="@_addProviderCredentialDtoFormModel.Certified"
+                    ValueChanged="@(v => _addProviderCredentialDtoFormModel.Certified = v)"
+                    For="@(() => _addProviderCredentialDtoFormModel.Certified)"
+                    MudBlazorColor="Color.Secondary"
+                    Placement="Placement.Bottom"
+                    Label="Certified"
+                    Xs="4"
+                    Md="4"
+                    IsFormDependencyLoading="_isLoadingAllDependencies"
+                    Size="Size.Small"/>
+
+            </MudGrid>
+
+            <MudStack
+                Style="justify-content: center; align-items: center; margin-top: 2rem;"
+            >
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+
+                               OnClick="@(async () => await Submit())">
+                        Save Credentials
+                    </MudButton>
+            </MudStack>
+        </MudCardContent>
+    </MudForm>
+</MudCard>
+
+
+@code {
+    MudForm _form = new();
+    
+    AddProviderCredentialDto _addProviderCredentialDtoFormModel = new();
+    
+    private List<SelectOption> _certification = new();
+    private List<SelectOption> _stateLicenses = new();
+    private List<SelectOption> _boards = new();
+    
+    private bool _isLoadingAllDependencies = true;
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _certification = DummyDataContext.GetDummyCertifications();
+            _stateLicenses = DummyDataContext.GetDummyStateLicenses();
+            _boards = DummyDataContext.GetPlatforms();
+            
+            _isLoadingAllDependencies = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            SnackBar.Add("Credential saved", Severity.Success);
+            await _form.ResetAsync();
+        }
+        catch (Exception e)
+        {
+            SnackBar.Add(e.Message, Severity.Error);
+        }
+    }
+}
